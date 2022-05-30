@@ -9,7 +9,8 @@ class Counter extends StatefulWidget {
   final Color? buttonColor;
   final TextStyle? countStyle;
   final EdgeInsets countPadding;
-  final ValueChanged<num>? onChanged;
+  final void Function(FormControl<num> formControl)? onChanged;
+  final void Function(FormControl<num> formControl)? onStatusChanged;
   final num min;
   final num initial;
   final num? max;
@@ -26,7 +27,8 @@ class Counter extends StatefulWidget {
       this.buttonColor,
       this.countStyle,
       num? initial,
-      this.countPadding = const EdgeInsets.all(SpacingConstants.kS8)})
+      this.countPadding = const EdgeInsets.all(SpacingConstants.kS8),
+      this.onStatusChanged})
       : initial = math.max(initial ?? min, min),
         super(key: key);
 
@@ -37,13 +39,15 @@ class Counter extends StatefulWidget {
 class _CounterState extends State<Counter> {
   late final FormControl<num> _counterControl;
 
-  // @override
-  // void didUpdateWidget(covariant Counter oldWidget) {
-  //   if (widget.initial != oldWidget.initial) {
-  //     _counterControl.value = widget.initial;
-  //   }
-  //   super.didUpdateWidget(oldWidget);
-  // }
+  @override
+  void didUpdateWidget(covariant Counter oldWidget) {
+    if (widget.initial != _counterControl.value) {
+      _counterControl.value = widget.includeFraction
+          ? widget.initial.toDouble()
+          : widget.initial.toInt();
+      super.didUpdateWidget(oldWidget);
+    }
+  }
 
   @override
   void initState() {
@@ -65,21 +69,20 @@ class _CounterState extends State<Counter> {
                 Validators.min(widget.min),
                 if (widget.max != null) Validators.max(widget.max),
               ]);
-    // if (widget.min != widget.initial) {
     _counterControl.valueChanges.listen(
       (value) {
-        if (value != null) {
-          widget.onChanged?.call(widget.includeFraction
-              ? _counterControl.value!
-              : _counterControl.value!.toInt());
+        if (!_counterControl.invalid) {
+          widget.onChanged?.call(_counterControl);
         }
       },
       cancelOnError: true,
     );
-    // widget.onChanged?.call(widget.includeFraction
-    //     ? _counterControl.value!
-    //     : _counterControl.value!.toInt());
-    // }
+    _counterControl.statusChanged.listen(
+      (status) {
+        widget.onStatusChanged?.call(_counterControl);
+      },
+      cancelOnError: true,
+    );
   }
 
   @override
@@ -111,9 +114,9 @@ class _CounterState extends State<Counter> {
       validationMessages: (_) {
         return {
           ValidationMessage.required:
-              'required ${widget.includeFraction ? '' : 'decimal'} number',
-          ValidationMessage.min: 'min: ${widget.min}',
-          ValidationMessage.max: 'max: ${widget.max}',
+              '${ValidationMessage.required} ${widget.includeFraction ? '' : 'decimal'} number',
+          ValidationMessage.min: '${ValidationMessage.min}: ${widget.min}',
+          ValidationMessage.max: '${ValidationMessage.max}: ${widget.max}',
         };
       },
       maxLines: null,
@@ -134,11 +137,6 @@ class _CounterState extends State<Counter> {
       formControl: _counterControl,
       style: widget.countStyle,
       keyboardType: TextInputType.number,
-      // onSubmitted: () async {
-      //   widget.onChanged?.call(widget.includeFraction
-      //       ? _counterControl.value!
-      //       : _counterControl.value!.toInt());
-      // },
     );
   }
 
@@ -150,9 +148,6 @@ class _CounterState extends State<Counter> {
           : math.min(oldValue + 1, widget.max!);
       _counterControl.value =
           widget.includeFraction ? newValue : newValue.toInt();
-      // widget.onChanged?.call(widget.includeFraction
-      //     ? _counterControl.value!
-      //     : _counterControl.value!.toInt());
     }
   }
 
@@ -162,9 +157,6 @@ class _CounterState extends State<Counter> {
       var newValue = math.max(oldValue - 1, widget.min);
       _counterControl.value =
           widget.includeFraction ? newValue : newValue.toInt();
-      // widget.onChanged?.call(widget.includeFraction
-      //     ? _counterControl.value!
-      //     : _counterControl.value!.toInt());
     }
   }
 

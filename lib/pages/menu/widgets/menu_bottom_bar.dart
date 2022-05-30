@@ -55,9 +55,14 @@ class MenuBottomBar extends ConsumerWidget {
             ActionChip(
               backgroundColor: ColorConstants.kWhite,
               onPressed: () {
+                // final invalidControl = ref.read(cartInvalidFormControlProvider);
+                // if (invalidControl == null) {
                 final stateController =
                     ref.read(updateOrderStateProvider.state);
                 stateController.state = UpdateOrderState.confirm(orderModel);
+                // } else {
+                //   invalidControl.markAsTouched();
+                // }
               },
               label: Text(
                 StringConstants.kViewOrder,

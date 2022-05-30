@@ -30,10 +30,16 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   void initState() {
     super.initState();
     form = FormGroup({
-      StringConstants.kMobileNumberKey: FormControl<String>(
-          validators: [Validators.required, Validators.number], value: ''),
-      StringConstants.kFPinKey: FormControl<String>(
-          validators: [Validators.required, Validators.number], value: ''),
+      StringConstants.kMobileNumberKey: FormControl<String>(validators: [
+        Validators.required,
+        Validators.number,
+        Validators.pattern(RegExp(r'^[9][6-8]{1}[0-9]{8}$'))
+      ]),
+      StringConstants.kFPinKey: FormControl<String>(validators: [
+        Validators.required,
+        Validators.number,
+        Validators.pattern(RegExp(r'^[0-9]+$'))
+      ]),
     });
   }
 
@@ -107,6 +113,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 vertical: SpacingConstants.kS10),
                             child: ReactiveTextField(
                               formControlName: StringConstants.kMobileNumberKey,
+                              keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
                                 prefixIcon: Center(
                                   widthFactor: 0,
@@ -141,6 +148,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                             child: ReactiveTextField(
                               formControlName: StringConstants.kFPinKey,
                               obscureText: hidePassword,
+                              keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 prefixIcon: const Center(
                                   widthFactor: 0,
@@ -189,21 +197,36 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                               horizontal: SpacingConstants.kS30,
                               vertical: SpacingConstants.kS5,
                             ),
-                            child: Consumer(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Theme.of(context).primaryColor,
-                                    minimumSize: const Size(
-                                        double.infinity, SpacingConstants.kS50),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(RadiusConstants.kR8),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    _onLoginButtonPressed();
-                                  },
-                                  child: Text(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context).primaryColor,
+                                minimumSize: const Size(
+                                    double.infinity, SpacingConstants.kS50),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(RadiusConstants.kR8),
+                                ),
+                              ),
+                              onPressed: () {
+                                _onLoginButtonPressed();
+                              },
+                              child: Consumer(builder: (context, ref, child) {
+                                ref.listen<SignInState>(signInNotifierProvider,
+                                    (previous, state) {
+                                  state.maybeWhen(
+                                      orElse: () {},
+                                      error: (failure, onRetry) =>
+                                          ErrorMsgSnackBar.build(
+                                              message: failure.message),
+                                      authenticated: () {
+                                        ref
+                                            .read(authNotifierProvider.notifier)
+                                            .isUserLoggedIn();
+                                      });
+                                });
+                                final state = ref.watch(signInNotifierProvider);
+                                return state.maybeWhen(
+                                  orElse: () => Text(
                                     StringConstants.kLogin.toUpperCase(),
                                     style: TextStyle(
                                       fontWeight: StylesConstants.kTitleWeight,
@@ -213,40 +236,20 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                       fontSize: StylesConstants.kTitleSize,
                                     ),
                                   ),
-                                ),
-                                builder: (context, ref, child) {
-                                  ref.listen<SignInState>(
-                                      signInNotifierProvider,
-                                      (previous, state) {
-                                    state.maybeWhen(
-                                        orElse: () {},
-                                        error: (failure, onRetry) =>
-                                            ErrorMsgSnackBar.build(
-                                                message: failure.message),
-                                        authenticated: () {
-                                          ref
-                                              .read(
-                                                  authNotifierProvider.notifier)
-                                              .isUserLoggedIn();
-                                        });
-                                  });
-                                  final state =
-                                      ref.watch(signInNotifierProvider);
-                                  return state.maybeWhen(
-                                    orElse: () => Column(
-                                      children: [
-                                        child!,
-                                        const SizedBox(
-                                          height: SpacingConstants.kS40,
-                                        )
-                                      ],
-                                    ),
-                                    submitting: () {
-                                      FocusScope.of(context).unfocus();
-                                      return const Loading();
-                                    },
-                                  );
-                                }),
+                                  submitting: () {
+                                    FocusScope.of(context).unfocus();
+                                    return Loading(
+                                      color: Theme.of(context)
+                                          .primaryColor
+                                          .getForegroundColor(),
+                                    );
+                                  },
+                                );
+                              }),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: SpacingConstants.kS40,
                           ),
                         ]),
                   )

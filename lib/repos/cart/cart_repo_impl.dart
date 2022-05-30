@@ -14,8 +14,7 @@ class CartRepoImpl implements CartRepo {
 
   @override
   Future<void> saveItemToCart(MenuItemModel menuItemModel) async {
-    final MenuItemModel? oldItem =
-        findMenuItemFromCart(menuItemModel, CartRepoImpl);
+    final MenuItemModel? oldItem = findMenuItemFromCart(menuItemModel);
     if (menuItemModel.iNum == null) {
       return;
     }
@@ -35,8 +34,7 @@ class CartRepoImpl implements CartRepo {
 
   @override
   Future<void> removeItemFromCart(MenuItemModel menuItemModel) async {
-    final MenuItemModel? oldItem =
-        findMenuItemFromCart(menuItemModel, CartRepoImpl);
+    final MenuItemModel? oldItem = findMenuItemFromCart(menuItemModel);
     if (menuItemModel.iNum == null) {
       return;
     }
@@ -46,7 +44,7 @@ class CartRepoImpl implements CartRepo {
   }
 
   @override
-  MenuItemModel? findMenuItemFromCart(MenuItemModel menuItemModel, Type type) {
+  MenuItemModel? findMenuItemFromCart(MenuItemModel menuItemModel) {
     return menuItemModel.iNum == null
         ? null
         : _cartModel.menuItems[menuItemModel.iNum];

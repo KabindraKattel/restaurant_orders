@@ -20,6 +20,10 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final inputFormControl = FormControl(
+      value: _model.tableName,
+      validators: [Validators.required],
+    );
     return Visibility(
       visible: (ref.watch(cartNotifierProvider(_model)).model?.menuItems ?? {})
           .isNotEmpty,
@@ -34,11 +38,18 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
             children: [
               Expanded(
                 child: ChipInputTextField(
-                  initialValue: _model.tableName,
-                  validators: [Validators.required],
-                  onChanged: (value) async {
-                    _model.tableName = value;
-                  },
+                  formControl: inputFormControl,
+                  // onChanged: (value) async {
+                  //   ref.refresh(cartInvalidFormControlProvider);
+                  //   _model.tableName = value.value;
+                  // },
+                  // onStatusChanged: (formControl) {
+                  //   if (formControl.invalid) {
+                  //     final stateController =
+                  //         ref.read(cartInvalidFormControlProvider.state);
+                  //     stateController.state = formControl;
+                  //   }
+                  // },
                 ),
               ),
               const SizedBox(
@@ -69,11 +80,24 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
               Expanded(
                 child: ActionChip(
                   backgroundColor: Theme.of(context).primaryColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    // final invalidControl =
+                    //     ref.read(cartInvalidFormControlProvider);
+                    // if (invalidControl == null) {
+                    //   print("ALL OK");
+                    // } else {
+                    //   invalidControl.markAsTouched();
+                    // }
+                    if (inputFormControl.invalid) {
+                      inputFormControl.markAsTouched();
+                    } else {
+                      print("All OK");
+                    }
+                  },
                   label: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      StringConstants.kViewOrder,
+                      StringConstants.kConfirm,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context)

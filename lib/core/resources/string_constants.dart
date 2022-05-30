@@ -15,6 +15,7 @@ class StringConstants {
   ///App
   static const String kMenu = 'Menu';
   static const String kConfirmOrder = 'Confirm Order';
+  static const String kConfirm = 'Confirm';
 
   static const String kOrderIdKey = 'Order No: ';
   static const String kTableIdKey = 'Table: ';

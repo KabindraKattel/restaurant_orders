@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/no_data_found.dart';
 
-class TabulatedList<T> extends StatelessWidget {
+class TabulatedList<K, V> extends StatelessWidget {
   final bool showHeader;
   final EdgeInsets tablePadding;
   final EdgeInsets tableCellPadding;
   final int noOfColumns;
-  final List<T> rows;
+  final Map<K, V> rows;
   final String? noDataFoundMessage;
   final TableColumnWidth Function(int column)? columnWidthBuilder;
   final Widget Function(int column) headerBuilder;
-  final Widget Function(T rowItem, int row, int column) tableCellBuilder;
+  final Widget Function(V rowValue, K rowKey, int column) tableCellBuilder;
   final Color? footerColor;
   final Widget? footer;
 
-  TabulatedList({
-    Key? key,
+  const TabulatedList({
+    super.key,
     required this.noOfColumns,
-    required List<T> rows,
+    required this.rows,
     required this.headerBuilder,
     required this.tableCellBuilder,
     this.footer,
@@ -28,8 +28,7 @@ class TabulatedList<T> extends StatelessWidget {
     this.tableCellPadding = const EdgeInsets.all(SpacingConstants.kS4),
     this.showHeader = true,
     this.noDataFoundMessage,
-  })  : rows = List.of(rows),
-        super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +73,7 @@ class TabulatedList<T> extends StatelessWidget {
                           ? null
                           : List.generate(noOfColumns,
                               (index) => columnWidthBuilder!(index)).asMap(),
-                      children: rows
-                          .asMap()
-                          .entries
+                      children: rows.entries
                           .map((e) => TableRow(
                                 children: List.generate(
                                   noOfColumns,

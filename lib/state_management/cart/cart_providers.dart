@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/pages/menu/widgets/menu_items_screen.dart';
 import 'package:restaurant_orders/state_management/shared/provider.dart';
 
 import 'cart_items_notifier.dart';
@@ -13,13 +12,16 @@ final cartNotifierProvider =
   ),
 );
 
+// final cartInvalidFormControlProvider = StateProvider.autoDispose<FormControl?>(
+//   (ref) => null,
+// );
+
 final findCartItemProvider = Provider.family
     .autoDispose<MenuItemModel?, OrderModelWithMenuItem>(
         (ref, orderModelWithMenuItem) {
   return ref
       .watch(cartRepoProvider(orderModelWithMenuItem.orderModel))
-      .findMenuItemFromCart(
-          orderModelWithMenuItem.menuItemModel, MenuItemsScreen);
+      .findMenuItemFromCart(orderModelWithMenuItem.menuItemModel);
 });
 
 class OrderModelWithMenuItem {
