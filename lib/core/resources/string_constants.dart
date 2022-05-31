@@ -25,4 +25,5 @@ class StringConstants {
   static const String kViewOrder = 'View Order';
   static const String kEnterTable = 'Enter Table';
   static const String kReviseOrder = 'Revise';
+  static const String kUpdatingOrder = 'Updating Order No: ';
 }

@@ -13,8 +13,12 @@ import 'menu_items_screen.dart';
 class MenuScreen extends ConsumerWidget {
   final List<MenuGroupModel> menuGroupModel;
   final OrderModel orderModel;
+  final String? menuTab;
   const MenuScreen(
-      {Key? key, required this.menuGroupModel, required this.orderModel})
+      {Key? key,
+      required this.menuGroupModel,
+      required this.orderModel,
+      this.menuTab})
       : super(key: key);
 
   @override
@@ -28,6 +32,7 @@ class MenuScreen extends ConsumerWidget {
         return true;
       },
       child: ChoiceChipTabView(
+        initialIndex: _getTabIndex(menuTab),
         tabBarColor: ColorConstants.kCategoryButtonBarColor,
         choiceChipTabViewData: menuGroupModel.asMap().map(
               (key, value) => MapEntry(
@@ -41,13 +46,24 @@ class MenuScreen extends ConsumerWidget {
                       menuItemModel: model.asMap(),
                       orderModel: orderModel,
                     ),
-                    error: (failure, onRetry) =>
-                        MyErrorWidget(failure: failure, onRetry: onRetry),
+                    error: (failure, onRetry) => MyErrorWidget(
+                      failure: failure,
+                      onRetry: onRetry,
+                    ),
                   );
                 }),
               ),
             ),
       ),
     );
+  }
+
+  int _getTabIndex(String? menuTab) {
+    for (int i = 0; i < menuGroupModel.length; i++) {
+      if (menuGroupModel[i].groupName == menuTab) {
+        return i;
+      }
+    }
+    return 0;
   }
 }

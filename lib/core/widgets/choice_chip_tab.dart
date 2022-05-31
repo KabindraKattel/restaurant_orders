@@ -39,14 +39,18 @@ class _ChoiceChipTabState extends State<ChoiceChipTab> {
   void initState() {
     super.initState();
     _selected = widget.selected;
+    if (_selected) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        widget.onSelected?.call(_selected);
+      });
+    }
   }
 
   @override
   void didUpdateWidget(covariant ChoiceChipTab oldWidget) {
     if (widget.selected != _selected) {
-      setState(() {
-        _selected = widget.selected;
-      });
+      _selected = widget.selected;
+      widget.onSelected?.call(_selected);
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -67,10 +71,12 @@ class _ChoiceChipTabState extends State<ChoiceChipTab> {
       onSelected: widget.onSelected == null
           ? null
           : (selected) {
-              setState(() {
-                _selected = selected;
-                widget.onSelected?.call(selected);
-              });
+              if (_selected == false && selected) {
+                setState(() {
+                  _selected = selected;
+                  widget.onSelected?.call(_selected);
+                });
+              }
             },
       side: BorderSide(
         color: _selected

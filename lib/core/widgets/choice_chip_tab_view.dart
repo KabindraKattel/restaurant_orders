@@ -7,9 +7,13 @@ class ChoiceChipTabView extends StatefulWidget {
   final Map<String, Widget> choiceChipTabViewData;
   late final List<String> _tabs;
   late final List<Widget> _tabViews;
+  final int initialIndex;
 
   ChoiceChipTabView(
-      {Key? key, required this.choiceChipTabViewData, this.tabBarColor})
+      {Key? key,
+      required this.choiceChipTabViewData,
+      this.tabBarColor,
+      this.initialIndex = 0})
       : super(key: key) {
     _tabs = choiceChipTabViewData.keys.toList(growable: false);
     _tabViews = choiceChipTabViewData.values.toList(growable: false);
@@ -20,7 +24,13 @@ class ChoiceChipTabView extends StatefulWidget {
 }
 
 class _ChoiceChipTabViewState extends State<ChoiceChipTabView> {
-  final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
+  late final ValueNotifier<int> _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = ValueNotifier(widget.initialIndex);
+  }
 
   @override
   void dispose() {
@@ -33,6 +43,7 @@ class _ChoiceChipTabViewState extends State<ChoiceChipTabView> {
     return Column(
       children: [
         ChoiceChipSelectorBar(
+          initialIndex: widget.initialIndex,
           bgColor: widget.tabBarColor,
           labels: widget._tabs,
           onSelected: (index) {

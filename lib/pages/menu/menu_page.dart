@@ -10,9 +10,11 @@ import 'package:restaurant_orders/state_management/menu/menu_groups/menu_groups_
 
 class MenuPage extends ConsumerWidget {
   late final OrderModel orderModel;
+  final String? menuTab;
   MenuPage({
     Key? key,
     OrderModel? orderModel,
+    this.menuTab,
   }) : super(key: key) {
     this.orderModel = OrderModel.init();
   }
@@ -35,6 +37,7 @@ class MenuPage extends ConsumerWidget {
                 return state.when(
                     loading: () => const Loading(),
                     data: (model) => MenuScreen(
+                          menuTab: menuTab,
                           menuGroupModel: model,
                           orderModel: orderModel,
                         ),

@@ -5,7 +5,8 @@ part 'update_order_state.freezed.dart';
 
 @freezed
 class UpdateOrderState with _$UpdateOrderState {
-  const factory UpdateOrderState.select() = UpdateOrderItemsSelection;
+  const factory UpdateOrderState.select(String? menuTab) =
+      UpdateOrderItemsSelection;
   const factory UpdateOrderState.confirm(OrderModel orderModel) =
       UpdateOrderItemsConfirm;
 }

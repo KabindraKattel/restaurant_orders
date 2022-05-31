@@ -45,8 +45,13 @@ class _CounterState extends State<Counter> {
       _counterControl.value = widget.includeFraction
           ? widget.initial.toDouble()
           : widget.initial.toInt();
-      super.didUpdateWidget(oldWidget);
     }
+    if (widget.disabled != oldWidget.disabled) {
+      widget.disabled
+          ? _counterControl.markAsDisabled()
+          : _counterControl.markAsEnabled();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -90,7 +95,7 @@ class _CounterState extends State<Counter> {
     return Row(
       children: [
         _buildButton(
-          _onDecrement,
+          widget.disabled ? null : _onDecrement,
           Icons.remove,
         ),
         Flexible(
@@ -101,7 +106,7 @@ class _CounterState extends State<Counter> {
           ),
         ),
         _buildButton(
-          _onIncrement,
+          widget.disabled ? null : _onIncrement,
           Icons.add,
         )
       ],
@@ -165,7 +170,7 @@ class _CounterState extends State<Counter> {
       onTap: onPressed,
       // splashRadius: widget.countStyle?.fontSize,
       child: Icon(
-        color: ColorConstants.kBlack,
+        color: ColorConstants.kBlack.withOpacity(widget.disabled ? 0.2 : 1),
         icon,
       ),
     );

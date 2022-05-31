@@ -18,8 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$UpdateOrderStateTearOff {
   const _$UpdateOrderStateTearOff();
 
-  UpdateOrderItemsSelection select() {
-    return const UpdateOrderItemsSelection();
+  UpdateOrderItemsSelection select(String? menuTab) {
+    return UpdateOrderItemsSelection(
+      menuTab,
+    );
   }
 
   UpdateOrderItemsConfirm confirm(OrderModel orderModel) {
@@ -36,19 +38,19 @@ const $UpdateOrderState = _$UpdateOrderStateTearOff();
 mixin _$UpdateOrderState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() select,
+    required TResult Function(String? menuTab) select,
     required TResult Function(OrderModel orderModel) confirm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
     required TResult orElse(),
   }) =>
@@ -96,6 +98,7 @@ abstract class $UpdateOrderItemsSelectionCopyWith<$Res> {
   factory $UpdateOrderItemsSelectionCopyWith(UpdateOrderItemsSelection value,
           $Res Function(UpdateOrderItemsSelection) then) =
       _$UpdateOrderItemsSelectionCopyWithImpl<$Res>;
+  $Res call({String? menuTab});
 }
 
 /// @nodoc
@@ -109,55 +112,78 @@ class _$UpdateOrderItemsSelectionCopyWithImpl<$Res>
   @override
   UpdateOrderItemsSelection get _value =>
       super._value as UpdateOrderItemsSelection;
+
+  @override
+  $Res call({
+    Object? menuTab = freezed,
+  }) {
+    return _then(UpdateOrderItemsSelection(
+      menuTab == freezed
+          ? _value.menuTab
+          : menuTab // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$UpdateOrderItemsSelection implements UpdateOrderItemsSelection {
-  const _$UpdateOrderItemsSelection();
+  const _$UpdateOrderItemsSelection(this.menuTab);
+
+  @override
+  final String? menuTab;
 
   @override
   String toString() {
-    return 'UpdateOrderState.select()';
+    return 'UpdateOrderState.select(menuTab: $menuTab)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is UpdateOrderItemsSelection);
+            other is UpdateOrderItemsSelection &&
+            const DeepCollectionEquality().equals(other.menuTab, menuTab));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(menuTab));
+
+  @JsonKey(ignore: true)
+  @override
+  $UpdateOrderItemsSelectionCopyWith<UpdateOrderItemsSelection> get copyWith =>
+      _$UpdateOrderItemsSelectionCopyWithImpl<UpdateOrderItemsSelection>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() select,
+    required TResult Function(String? menuTab) select,
     required TResult Function(OrderModel orderModel) confirm,
   }) {
-    return select();
+    return select(menuTab);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
   }) {
-    return select?.call();
+    return select?.call(menuTab);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
     required TResult orElse(),
   }) {
     if (select != null) {
-      return select();
+      return select(menuTab);
     }
     return orElse();
   }
@@ -195,7 +221,13 @@ class _$UpdateOrderItemsSelection implements UpdateOrderItemsSelection {
 }
 
 abstract class UpdateOrderItemsSelection implements UpdateOrderState {
-  const factory UpdateOrderItemsSelection() = _$UpdateOrderItemsSelection;
+  const factory UpdateOrderItemsSelection(String? menuTab) =
+      _$UpdateOrderItemsSelection;
+
+  String? get menuTab;
+  @JsonKey(ignore: true)
+  $UpdateOrderItemsSelectionCopyWith<UpdateOrderItemsSelection> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -265,7 +297,7 @@ class _$UpdateOrderItemsConfirm implements UpdateOrderItemsConfirm {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() select,
+    required TResult Function(String? menuTab) select,
     required TResult Function(OrderModel orderModel) confirm,
   }) {
     return confirm(orderModel);
@@ -274,7 +306,7 @@ class _$UpdateOrderItemsConfirm implements UpdateOrderItemsConfirm {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
   }) {
     return confirm?.call(orderModel);
@@ -283,7 +315,7 @@ class _$UpdateOrderItemsConfirm implements UpdateOrderItemsConfirm {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? select,
+    TResult Function(String? menuTab)? select,
     TResult Function(OrderModel orderModel)? confirm,
     required TResult orElse(),
   }) {
