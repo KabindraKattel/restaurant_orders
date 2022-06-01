@@ -42,9 +42,13 @@ class MenuScreen extends ConsumerWidget {
                       .watch(menuItemsNotifierProvider(value.groupName ?? ''));
                   return state.when(
                     loading: () => const Loading(),
-                    data: (model) => MenuItemsScreen(
-                      menuItemModel: model.asMap(),
-                      orderModel: orderModel,
+                    data: (model) => RefreshIndicator(
+                      onRefresh: () async => ref.refresh(
+                          menuItemsNotifierProvider(value.groupName ?? '')),
+                      child: MenuItemsScreen(
+                        menuItemModel: model.asMap(),
+                        orderModel: orderModel,
+                      ),
                     ),
                     error: (failure, onRetry) => MyErrorWidget(
                       failure: failure,

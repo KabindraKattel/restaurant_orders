@@ -33,8 +33,12 @@ class TabulatedList<K, V> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return rows.isEmpty || noOfColumns <= 0
-        ? NoDataFound(
-            message: noDataFoundMessage,
+        ? Scrollable(
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()),
+            viewportBuilder: (_, __) => NoDataFound(
+              message: noDataFoundMessage,
+            ),
           )
         : Column(
             children: [
@@ -66,6 +70,8 @@ class TabulatedList<K, V> extends StatelessWidget {
                 child: Padding(
                   padding: tablePadding.copyWith(top: 0),
                   child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics()),
                     child: Table(
                       defaultVerticalAlignment:
                           TableCellVerticalAlignment.middle,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
@@ -27,6 +28,11 @@ class MenuPage extends ConsumerWidget {
         title: const Text(
           StringConstants.kMenu,
         ),
+        actions: [
+          IconButton(
+              onPressed: () async => ref.refresh(menuGroupsNotifierProvider),
+              icon: const FaIcon(FontAwesomeIcons.arrowsRotate))
+        ],
       ),
       body: Column(
         children: [
