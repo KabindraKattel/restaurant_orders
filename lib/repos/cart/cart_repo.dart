@@ -5,4 +5,5 @@ abstract class CartRepo {
   MenuItemModel? findMenuItemFromCart(MenuItemModel menuItemModel);
   Future<void> saveItemToCart(MenuItemModel menuItemModel);
   Future<void> removeItemFromCart(MenuItemModel menuItemModel);
+  Future<void> resetCartModel();
 }

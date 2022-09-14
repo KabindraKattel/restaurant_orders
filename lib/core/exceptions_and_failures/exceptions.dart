@@ -1,38 +1,63 @@
+import 'package:meta/meta.dart';
+
 abstract class CustomException implements Exception {
-  String get message;
+  String? get _message;
+
+  String get message => _message ?? _defaultMessage;
+
+  @protected
+  String get _defaultMessage;
 
   @override
   String toString() {
-    return message;
+    return _message ?? _defaultMessage;
   }
 }
 
-class DatabaseException implements CustomException {
-  String message;
-  DatabaseException({this.message: 'Database exception'});
+class DatabaseException extends CustomException {
+  final String? _message;
+  DatabaseException([this._message]);
+
+  @override
+  String get _defaultMessage => 'Database exception';
 }
 
-class DataNotFoundException implements CustomException {
-  String message;
-  DataNotFoundException({this.message: 'Data Not Found'});
+class DataNotFoundException extends CustomException {
+  final String? _message;
+  DataNotFoundException([this._message]);
+
+  @override
+  String get _defaultMessage => 'Data Not Found';
 }
 
-class ServerException implements CustomException {
-  String message;
-  ServerException({this.message: 'Internal Server Error'});
+class ServerException extends CustomException {
+  final String? _message;
+  ServerException([this._message]);
+
+  @override
+  String get _defaultMessage => 'Internal Server Error';
 }
 
-class NetworkException implements CustomException {
-  String message;
-  NetworkException({this.message: 'No Internet Connection'});
+class NetworkException extends CustomException {
+  final String? _message;
+  NetworkException([this._message]);
+
+  @override
+  String get _defaultMessage => 'No Internet Connection';
 }
 
-class UnAuthorizedException implements CustomException {
-  String message;
-  UnAuthorizedException({this.message: 'User UnAuthorized'});
+class UnAuthorizedException extends CustomException {
+  final String? _message;
+  UnAuthorizedException([this._message]);
+
+  @override
+  String get _defaultMessage => 'User UnAuthorized';
 }
 
-class GoogleUnAuthorizedException implements CustomException {
-  String message;
-  GoogleUnAuthorizedException({this.message: 'Google User UnAuthorized'});
+class GoogleUnAuthorizedException extends CustomException {
+  final String? _message;
+  GoogleUnAuthorizedException([this._message]);
+
+  @override
+  String get _defaultMessage => 'Google User UnAuthorized';
 }

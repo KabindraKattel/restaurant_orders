@@ -7,14 +7,14 @@ import 'package:restaurant_orders/core/resources/cache_manager.dart';
 import 'package:restaurant_orders/core/resources/duration_constants.dart';
 import 'package:restaurant_orders/example/example.dart';
 import 'package:restaurant_orders/models/user_model.dart';
-import 'package:restaurant_orders/repos/connectivity/check_connectivity.dart';
+import 'package:restaurant_orders/repos/dio/i_dio_http.dart';
 
 import 'auth_repo_impl.dart';
 
 class AuthRepoLocalImpl extends AuthRepoImpl {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  AuthRepoLocalImpl(CheckConnectivity connectivity) : super(connectivity);
+  AuthRepoLocalImpl(IHttpClient client) : super(client);
 
   @override
   Future<Either<Failure, void>> signInWithCredentials(

@@ -8,6 +8,7 @@ import 'package:restaurant_orders/core/extensions/color_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/counter.dart';
 import 'package:restaurant_orders/pages/auth_guard/auth_guard_page.dart';
+import 'package:restaurant_orders/pages/create_order/create_order_page.dart';
 
 import 'core/utils/file_utils.dart';
 
@@ -19,10 +20,7 @@ Future<void> main() async {
   Lottie.traceEnabled = true;
   packageInfo = await PackageInfo.fromPlatform();
   Hive.init(await FileUtils.getCacheDirPath());
-  // await Hive.openLazyBox<Map>(CacheManager.kAppCache);
-  // Hive.registerAdapter(OrderModelAdapter());
-  // Hive.registerAdapter(OrderTypeAdapter());
-  // Hive.openLazyBox(DbBoxesManager.kOrderBox);
+  await Hive.openLazyBox<Map>(CacheManager.kAppCache);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -76,9 +74,16 @@ class _MyHomePageState extends State<MyHomePage> {
           //   fontWeight: StylesConstants.kHeadingWeight,
           // ),
         ),
-        actions: const [
-          Icon(Icons.list),
-          Icon(Icons.add),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CreateOrderPage())),
+          ),
         ],
       ),
       body: Column(

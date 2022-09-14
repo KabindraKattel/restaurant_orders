@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
+import 'package:restaurant_orders/core/extensions/map_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/bar.dart';
 import 'package:restaurant_orders/core/widgets/chip_text_input_field.dart';
@@ -50,7 +51,7 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
                 width: SpacingConstants.kS8,
               ),
               Expanded(
-                child: _buildConfirm(context, inputFormControl),
+                child: _buildConfirm(context, ref, inputFormControl),
               ),
             ],
           ),
@@ -59,8 +60,8 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
     );
   }
 
-  ActionChip _buildConfirm(
-      BuildContext context, FormControl<String> inputFormControl) {
+  ActionChip _buildConfirm(BuildContext context, WidgetRef ref,
+      FormControl<String> inputFormControl) {
     return ActionChip(
       backgroundColor: Theme.of(context).primaryColor,
       onPressed: () {
@@ -74,7 +75,11 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
         if (inputFormControl.invalid) {
           inputFormControl.markAsTouched();
         } else {
-          print("All OK");
+          print(ref
+              .read(cartNotifierProvider(_model))
+              .model!
+              .toJson()
+              .prettify());
         }
       },
       label: SizedBox(
@@ -94,17 +99,9 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
   ChipInputTextField _buildTableInput(FormControl<String> inputFormControl) {
     return ChipInputTextField(
       formControl: inputFormControl,
-      // onChanged: (value) async {
-      //   ref.refresh(cartInvalidFormControlProvider);
-      //   _model.tableName = value.value;
-      // },
-      // onStatusChanged: (formControl) {
-      //   if (formControl.invalid) {
-      //     final stateController =
-      //         ref.read(cartInvalidFormControlProvider.state);
-      //     stateController.state = formControl;
-      //   }
-      // },
+      onChanged: (control) async {
+        _model.tableName = control.value;
+      },
     );
   }
 

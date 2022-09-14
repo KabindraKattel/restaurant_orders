@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:restaurant_orders/core/exceptions_and_failures/failures.dart';
+import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 
 class DioRetryInterceptor extends InterceptorsWrapper {
   Future<Either<Failure, Response>> Function(RequestOptions requestOptions)
@@ -13,7 +13,7 @@ class DioRetryInterceptor extends InterceptorsWrapper {
   });
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     if (_shouldRetry(err)) {
       var responseOrError = await onScheduleRetry(err.requestOptions);
       return responseOrError.fold((l) {

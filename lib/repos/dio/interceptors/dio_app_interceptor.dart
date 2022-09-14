@@ -1,29 +1,28 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:restaurant_orders/core/resources/resources.dart';
 
 import '../../../core/exceptions_and_failures/exceptions_and_failures.dart';
 import '../../../core/resources/cache_manager.dart';
-import '../dio_http_impl.dart';
+import '../dio_http.dart';
 
 class DioAppInterceptor extends InterceptorsWrapper {
   final String _sessionExpiredMessage = "Session Expired.";
+  final String _sendTimeoutMessage = "Send Timeout.";
+  final String _receiveTimeoutMessage = "Receive Timeout.";
+  final String _otherMessage = "Some Error Occurred.";
   final _storage = const FlutterSecureStorage();
 
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     if (options.headers.containsKey(
-      DioCustomHeader.kRequiresToken,
+      DioCustomHeader.REQUIRES_TOKEN,
     )) {
-      options.headers.remove(DioCustomHeader.kRequiresToken);
+      options.headers.remove(DioCustomHeader.REQUIRES_TOKEN);
       final String? value =
           await _storage.read(key: CacheManager.kMobileNumberKey);
-      // final String? value =
-      //     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiNDEyIiwidXNlcl9uYW1lIjoiYWdyaW0iLCJuYW1lIjoiQWdyaW0gUmFpIiwiaWF0IjoxNjI4ODQ4NjU4LCJuYmYiOjE2Mjg4NDg2NTgsImV4cCI6MTYyODkzNTA1OH0.5M8OKkKPr0plglil3xreWw4sn4eFMUBKQAPcxCKTkz8';
       if (value != null) {
-        options.queryParameters
-            .addAll({StringConstants.kMobileNumberKey: value});
+        options.queryParameters['MobileNumber'] = value;
       }
       return handler.next(options);
     } else {
@@ -33,32 +32,67 @@ class DioAppInterceptor extends InterceptorsWrapper {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    return handler.next(response);
+    if (response.data is Map<String, dynamic>) {
+      if (response.data['isSuccess'] != true) {
+        return handler.reject(
+          DioError(
+            requestOptions: response.requestOptions,
+            response: response..statusCode = 403,
+            type: DioErrorType.response,
+          ),
+          true,
+        );
+      }
+      return handler.next(response);
+    } else {
+      return handler.reject(
+          DioError(
+            requestOptions: response.requestOptions,
+            response: response,
+            type: DioErrorType.response,
+          ),
+          true);
+    }
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     switch (err.type) {
       case DioErrorType.connectTimeout:
         err.error = NetworkException();
         break;
       case DioErrorType.sendTimeout:
-        err.error = ServerException();
+        err.error = ServerException(_sendTimeoutMessage);
         break;
       case DioErrorType.receiveTimeout:
-        err.error = ServerException();
+        err.error = ServerException(_receiveTimeoutMessage);
         break;
       case DioErrorType.response:
+        String? customErrorMsg;
+        if (err.response != null &&
+            err.response!.data is Map<String, dynamic>) {
+          var msg = err.response!.data["message"];
+          if (msg is String?) {
+            customErrorMsg =
+                (msg?.toLowerCase() == 'null' || (msg?.trim().isEmpty ?? false))
+                    ? null
+                    : msg;
+          }
+        }
         if (err.response?.statusCode == 403) {
-          err.error = UnAuthorizedException(message: _sessionExpiredMessage);
+          final String? value =
+              await _storage.read(key: CacheManager.kMobileNumberKey);
+          err.error = UnAuthorizedException(
+              value == null ? null : customErrorMsg ?? _sessionExpiredMessage);
+        } else if (err.response?.statusCode == 200) {
+          err.error = ServerException(customErrorMsg);
         } else {
           err.error = ServerException(
-              message:
-                  err.response?.statusMessage.toString() ?? "Server Error");
+              customErrorMsg ?? err.response?.statusMessage.toString());
         }
         break;
       case DioErrorType.other:
-        err.error = ServerException();
+        err.error = ServerException(_otherMessage);
         break;
       default:
         break;

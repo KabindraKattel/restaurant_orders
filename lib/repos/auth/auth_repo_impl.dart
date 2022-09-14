@@ -1,21 +1,19 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/repos/connectivity/repos.dart';
+import 'package:restaurant_orders/repos/dio/i_dio_http.dart';
 
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
-  final CheckConnectivity _connectivity;
+  final IHttpClient _httpClient;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  AuthRepoImpl(this._connectivity);
+  AuthRepoImpl(this._httpClient);
 
   @override
   Future<Either<Failure, bool>> isUserSignedIn() async {
@@ -34,39 +32,28 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<Either<Failure, void>> signInWithCredentials(
       {required String mobileNo, required String fPin}) async {
-    try {
-      if (!await _connectivity.check()) {
-        throw NetworkException();
-      }
-      var formData = FormData.fromMap({
-        StringConstants.kMobileNumberKey: mobileNo,
-        StringConstants.kFPinKey: fPin,
-      });
-      Response response = await (Dio()..options.baseUrl = ApiEndPoints.kBase)
-          .post(ApiEndPoints.kAuth, data: formData);
+    var params = {
+      StringConstants.kMobileNumberKey: mobileNo,
+      StringConstants.kFPinKey: fPin,
+    };
+    return (await _httpClient.post(
+      ApiEndPoints.kAuth,
+      queryParameters: params,
+    ))
+        .fold((l) => Left(l), (response) async {
       try {
-        final Map<String, dynamic>? credentials =
-            jsonDecode(response.data['result']);
-        if (credentials != null) {
+        try {
           await _storage.write(
               key: CacheManager.kMobileNumberKey,
-              value: UserModel.fromJson(credentials).mobile);
+              value: jsonDecode(response.data?['result'] ?? '{}')?['Mobile']);
+          return const Right(null);
+        } on Exception {
+          throw DatabaseException();
         }
-        return const Right(null);
-      } on Exception {
-        throw DatabaseException();
+      } on DatabaseException catch (e) {
+        return Left(DatabaseFailure(message: e.message));
       }
-    } on DatabaseException catch (e) {
-      return Left(DatabaseFailure(message: e.message));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(message: e.message));
-    } on Exception {
-      try {
-        throw UnAuthorizedException();
-      } on UnAuthorizedException catch (e) {
-        return Left(AuthorizationFailure(message: e.message));
-      }
-    }
+    });
   }
 
   @override

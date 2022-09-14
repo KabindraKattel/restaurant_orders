@@ -1,14 +1,14 @@
+import 'package:check_connectivity/check_connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
-import 'package:restaurant_orders/core/exceptions_and_failures/exceptions.dart';
+import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 
 import '../../../core/resources/cache_manager.dart';
 import '../../../core/widgets/error_message_snack_bar.dart';
-import '../../connectivity/check_connectivity.dart';
-import '../dio_http_impl.dart';
+import '../dio_http.dart';
 
 class DioCachingInterceptor extends InterceptorsWrapper {
-  final CheckConnectivity connectivity;
+  final GetConnectionStatus connectivity;
 
   DioCachingInterceptor(this.connectivity);
 
@@ -16,10 +16,10 @@ class DioCachingInterceptor extends InterceptorsWrapper {
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     if (options.headers.containsKey(
-      DioCustomHeader.kRequiresToken,
+      DioCustomHeader.REQUIRES_TOKEN,
     )) {}
     if (options.method == 'GET') {
-      if (!await connectivity.check()) {
+      if (!await connectivity()) {
         final Map? data = (await Hive.lazyBox<Map>(CacheManager.kAppCache)
             .get(options.uri.toString(), defaultValue: null));
         ErrorMsgSnackBar.build(message: NetworkException().message);

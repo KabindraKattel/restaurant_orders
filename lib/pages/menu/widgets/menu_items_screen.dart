@@ -6,7 +6,7 @@ import 'package:restaurant_orders/core/widgets/tabulated_list.dart';
 import 'package:restaurant_orders/models/models.dart';
 import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
 
-class MenuItemsScreen extends StatelessWidget {
+class MenuItemsScreen extends ConsumerWidget {
   final Map<int, MenuItemModel> menuItemModel;
   final OrderModel orderModel;
   final String itemHeaderName;
@@ -26,66 +26,76 @@ class MenuItemsScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return TabulatedList<int, MenuItemModel>(
-      tablePadding: const EdgeInsets.all(SpacingConstants.kS16),
-      tableCellPadding: const EdgeInsets.all(SpacingConstants.kS8),
-      noOfColumns: 3,
-      rows: menuItemModel,
-      columnWidthBuilder: (column) {
-        if (column == 1) {
-          return const FixedColumnWidth(130);
+  Widget build(BuildContext context, WidgetRef ref) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (!Navigator.of(context).canPop()) {
+          return false;
         }
-        return const FlexColumnWidth(1);
+        ref.read(cartNotifierProvider(orderModel).notifier).reset();
+        return true;
       },
-      tableCellBuilder: (item, row, column) {
-        if (column == 0) {
-          return Text(
-            item.itemName ?? '',
-            style: const TextStyle(
-              fontSize: StylesConstants.kSubTitleSize,
-              fontWeight: StylesConstants.kSubTitleWeight,
-            ),
-          );
-        } else if (column == 1) {
-          return Consumer(builder: (context, ref, child) {
-            final model = ref.watch(
-              findCartItemProvider(
-                OrderModelWithMenuItem(orderModel, item),
+      child: TabulatedList<int, MenuItemModel>(
+        tablePadding: const EdgeInsets.all(SpacingConstants.kS16),
+        tableCellPadding: const EdgeInsets.all(SpacingConstants.kS8),
+        noOfColumns: 3,
+        rows: menuItemModel,
+        columnWidthBuilder: (column) {
+          if (column == 1) {
+            return const FixedColumnWidth(130);
+          }
+          return const FlexColumnWidth(1);
+        },
+        tableCellBuilder: (item, row, column) {
+          if (column == 0) {
+            return Text(
+              item.itemName ?? '',
+              style: const TextStyle(
+                fontSize: StylesConstants.kSubTitleSize,
+                fontWeight: StylesConstants.kSubTitleWeight,
               ),
             );
-            return _buildCounter(ref, model ?? item);
-          });
-        } else {
-          return isTotalMode
-              ? Consumer(builder: (context, ref, child) {
-                  final model = ref.watch(
-                    findCartItemProvider(
-                      OrderModelWithMenuItem(orderModel, item),
-                    ),
-                  );
-                  return _buildInfoText(
-                      ((model ?? item).quantity * (item.rate ?? 0)).toString());
-                })
-              : _buildInfoText(item.rate?.toString() ?? '');
-        }
-      },
-      headerBuilder: (column) {
-        return Text(
-          column == 0
-              ? itemHeaderName
-              : column == 1
-                  ? ''
-                  : rateOrTotalHeaderName ??
-                      (isTotalMode
-                          ? StringConstants.kTotalKey
-                          : StringConstants.kRateKey),
-          textAlign: TextAlign.start,
-          style: const TextStyle(
-              fontSize: StylesConstants.kTitleSize,
-              fontWeight: StylesConstants.kTitleWeight),
-        );
-      },
+          } else if (column == 1) {
+            return Consumer(builder: (context, ref, child) {
+              final model = ref.watch(
+                findCartItemProvider(
+                  OrderModelWithMenuItem(orderModel, item),
+                ),
+              );
+              return _buildCounter(ref, model ?? item);
+            });
+          } else {
+            return isTotalMode
+                ? Consumer(builder: (context, ref, child) {
+                    final model = ref.watch(
+                      findCartItemProvider(
+                        OrderModelWithMenuItem(orderModel, item),
+                      ),
+                    );
+                    return _buildInfoText(
+                        ((model ?? item).quantity * (item.rate ?? 0))
+                            .toString());
+                  })
+                : _buildInfoText(item.rate?.toString() ?? '');
+          }
+        },
+        headerBuilder: (column) {
+          return Text(
+            column == 0
+                ? itemHeaderName
+                : column == 1
+                    ? ''
+                    : rateOrTotalHeaderName ??
+                        (isTotalMode
+                            ? StringConstants.kTotalKey
+                            : StringConstants.kRateKey),
+            textAlign: TextAlign.start,
+            style: const TextStyle(
+                fontSize: StylesConstants.kTitleSize,
+                fontWeight: StylesConstants.kTitleWeight),
+          );
+        },
+      ),
     );
   }
 

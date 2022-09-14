@@ -9,11 +9,13 @@ class CreateOrderPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(updateOrderStateProvider);
-    return state.when(
-        select: (menuTab) => MenuPage(
-              menuTab: menuTab,
-            ),
-        confirm: (orderModel) => ConfirmOrderPage(orderModel));
+    return Consumer(builder: (context, ref, _) {
+      final state = ref.watch(updateOrderStateProvider);
+      return state.when(
+          select: (menuTab) => MenuPage(
+                menuTab: menuTab,
+              ),
+          confirm: (orderModel) => ConfirmOrderPage(orderModel));
+    });
   }
 }

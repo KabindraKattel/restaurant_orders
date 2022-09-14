@@ -1,11 +1,9 @@
-import 'package:restaurant_orders/models/menu_item_model.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/models/order_model.dart';
 
 import 'cart_repo.dart';
 
 class CartRepoImpl implements CartRepo {
-  final OrderModel _cartModel;
+  OrderModel _cartModel;
 
   CartRepoImpl(this._cartModel);
 
@@ -48,5 +46,10 @@ class CartRepoImpl implements CartRepo {
     return menuItemModel.iNum == null
         ? null
         : _cartModel.menuItems[menuItemModel.iNum];
+  }
+
+  @override
+  Future<void> resetCartModel() async {
+    _cartModel = OrderModel.init();
   }
 }

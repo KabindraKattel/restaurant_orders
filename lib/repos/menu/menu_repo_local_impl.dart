@@ -5,11 +5,11 @@ import 'package:restaurant_orders/core/exceptions_and_failures/failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/example/example.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/repos/dio/dio_http.dart';
+import 'package:restaurant_orders/repos/dio/i_dio_http.dart';
 import 'package:restaurant_orders/repos/menu/menu_repo_impl.dart';
 
 class MenuRepoLocalImpl extends MenuRepoImpl {
-  MenuRepoLocalImpl(HttpClient client) : super(client);
+  MenuRepoLocalImpl(IHttpClient client) : super(client);
 
   @override
   Future<Either<Failure, List<MenuGroupModel>>> get menuGroups async {

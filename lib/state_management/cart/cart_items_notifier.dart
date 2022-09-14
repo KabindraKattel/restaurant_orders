@@ -23,4 +23,9 @@ class CartItemsNotifier extends StateNotifier<CartItemsState> {
     await _repo.removeItemFromCart(item);
     state = state.copyWith(model: _repo.cartModel);
   }
+
+  void reset() async {
+    await _repo.resetCartModel();
+    state = CartItemsState.initial();
+  }
 }
