@@ -14,10 +14,12 @@ class StylesConstants {
   static const double kHeadingSize = SpacingConstants.kS18;
   static const double kTitleSize = SpacingConstants.kS16;
   static const double kSubTitleSize = SpacingConstants.kS14;
+  static const double kCaptionSize = SpacingConstants.kS10;
 
   static const FontWeight kHeadingWeight = FontWeight.bold;
   static const FontWeight kTitleWeight = FontWeight.w700;
   static const FontWeight kSubTitleWeight = FontWeight.w500;
+  static const FontWeight kCaptionWeight = FontWeight.w300;
 
   ///Dialog
   static const ShapeBorder kDialogShape = RoundedRectangleBorder(

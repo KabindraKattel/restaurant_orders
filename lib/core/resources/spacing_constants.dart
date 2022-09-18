@@ -12,6 +12,7 @@ class SpacingConstants {
   static const double kS16 = 16.0;
   static const double kS18 = 18.0;
   static const double kS20 = 20.0;
+  static const double kS24 = 24.0;
   static const double kS30 = 30.0;
   static const double kS32 = 32.0;
   static const double kS40 = 40.0;

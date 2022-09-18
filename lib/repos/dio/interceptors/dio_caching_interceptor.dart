@@ -5,7 +5,6 @@ import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_fa
 
 import '../../../core/resources/cache_manager.dart';
 import '../../../core/widgets/error_message_snack_bar.dart';
-import '../dio_http.dart';
 
 class DioCachingInterceptor extends InterceptorsWrapper {
   final GetConnectionStatus connectivity;
@@ -15,9 +14,6 @@ class DioCachingInterceptor extends InterceptorsWrapper {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    if (options.headers.containsKey(
-      DioCustomHeader.REQUIRES_TOKEN,
-    )) {}
     if (options.method == 'GET') {
       if (!await connectivity()) {
         final Map? data = (await Hive.lazyBox<Map>(CacheManager.kAppCache)

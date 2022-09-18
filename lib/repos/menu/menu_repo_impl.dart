@@ -17,7 +17,7 @@ class MenuRepoImpl implements MenuRepo {
   Future<Either<Failure, List<MenuGroupModel>>> get menuGroups async {
     return (await _client.post(
       ApiEndPoints.kMenuGroup,
-      requiresToken: true,
+      requiresMobileNumber: true,
     ))
         .fold((l) => Left(l), (response) {
       final Map<String, dynamic> data = response.data;
@@ -35,7 +35,7 @@ class MenuRepoImpl implements MenuRepo {
   Future<Either<Failure, List<MenuItemModel>>> getMenuItems(
       {required String menuGroupName}) async {
     return (await _client.post(ApiEndPoints.kMenuItem,
-            requiresToken: true,
+            requiresMobileNumber: true,
             queryParameters: {
           StringConstants.kMenuGroupKey: menuGroupName,
         }))

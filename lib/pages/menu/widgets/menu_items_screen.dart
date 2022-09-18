@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:restaurant_orders/core/extensions/num_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/counter.dart';
 import 'package:restaurant_orders/core/widgets/tabulated_list.dart';
@@ -56,14 +57,14 @@ class MenuItemsScreen extends ConsumerWidget {
               ),
             );
           } else if (column == 1) {
-            return Consumer(builder: (context, ref, child) {
-              final model = ref.watch(
-                findCartItemProvider(
-                  OrderModelWithMenuItem(orderModel, item),
-                ),
-              );
-              return _buildCounter(ref, model ?? item);
-            });
+            // return Consumer(builder: (context, ref, child) {
+            final model = ref.watch(
+              findCartItemProvider(
+                OrderModelWithMenuItem(orderModel, item),
+              ),
+            );
+            return _buildCounter(ref, model ?? item);
+            // });
           } else {
             return isTotalMode
                 ? Consumer(builder: (context, ref, child) {
@@ -74,7 +75,7 @@ class MenuItemsScreen extends ConsumerWidget {
                     );
                     return _buildInfoText(
                         ((model ?? item).quantity * (item.rate ?? 0))
-                            .toString());
+                            .neglectFractionZero());
                   })
                 : _buildInfoText(item.rate?.toString() ?? '');
           }
@@ -118,13 +119,6 @@ class MenuItemsScreen extends ConsumerWidget {
         fontSize: StylesConstants.kSubTitleSize,
         fontWeight: StylesConstants.kSubTitleWeight,
       ),
-      // onStatusChanged: (formControl) {
-      //   if (formControl.invalid) {
-      //     final stateController =
-      //         ref.read(cartInvalidFormControlProvider.state);
-      //     stateController.state = formControl;
-      //   }
-      // },
       onChanged: (formControl) async {
         if (formControl.value != null) {
           // ref.refresh(cartInvalidFormControlProvider);

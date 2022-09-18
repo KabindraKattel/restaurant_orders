@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurant_orders/core/resources/custom_input_field_value_accessors.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 
 class Counter extends StatefulWidget {
@@ -10,26 +12,24 @@ class Counter extends StatefulWidget {
   final TextStyle? countStyle;
   final EdgeInsets countPadding;
   final void Function(FormControl<num> formControl)? onChanged;
-  final void Function(FormControl<num> formControl)? onStatusChanged;
   final num min;
   final num initial;
   final num? max;
   final bool includeFraction;
   final bool disabled;
 
-  Counter(
-      {Key? key,
-      this.min = 0,
-      this.max,
-      this.disabled = false,
-      this.includeFraction = false,
-      this.onChanged,
-      this.buttonColor,
-      this.countStyle,
-      num? initial,
-      this.countPadding = const EdgeInsets.all(SpacingConstants.kS8),
-      this.onStatusChanged})
-      : initial = math.max(initial ?? min, min),
+  Counter({
+    Key? key,
+    this.min = 0,
+    this.max,
+    this.disabled = false,
+    this.includeFraction = false,
+    this.onChanged,
+    this.buttonColor,
+    this.countStyle,
+    num? initial,
+    this.countPadding = const EdgeInsets.all(SpacingConstants.kS8),
+  })  : initial = math.max(initial ?? min, min),
         super(key: key);
 
   @override
@@ -38,10 +38,11 @@ class Counter extends StatefulWidget {
 
 class _CounterState extends State<Counter> {
   late final FormControl<num> _counterControl;
+  late final StreamSubscription _subscription;
 
   @override
   void didUpdateWidget(covariant Counter oldWidget) {
-    if (widget.initial != _counterControl.value) {
+    if (widget.initial != oldWidget.initial) {
       _counterControl.value = widget.includeFraction
           ? widget.initial.toDouble()
           : widget.initial.toInt();
@@ -51,7 +52,14 @@ class _CounterState extends State<Counter> {
           ? _counterControl.markAsDisabled()
           : _counterControl.markAsEnabled();
     }
+    _counterControl.updateValueAndValidity();
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -74,17 +82,11 @@ class _CounterState extends State<Counter> {
                 Validators.min(widget.min),
                 if (widget.max != null) Validators.max(widget.max),
               ]);
-    _counterControl.valueChanges.listen(
+    _subscription = _counterControl.valueChanges.listen(
       (value) {
         if (!_counterControl.invalid) {
           widget.onChanged?.call(_counterControl);
         }
-      },
-      cancelOnError: true,
-    );
-    _counterControl.statusChanged.listen(
-      (status) {
-        widget.onStatusChanged?.call(_counterControl);
       },
       cancelOnError: true,
     );
@@ -116,13 +118,19 @@ class _CounterState extends State<Counter> {
   ReactiveTextField<num> _buildCounterField() {
     return ReactiveTextField<num>(
       textAlign: TextAlign.center,
-      validationMessages: (_) {
-        return {
-          ValidationMessage.required:
-              '${ValidationMessage.required} ${widget.includeFraction ? '' : 'decimal'} number',
-          ValidationMessage.min: '${ValidationMessage.min}: ${widget.min}',
-          ValidationMessage.max: '${ValidationMessage.max}: ${widget.max}',
-        };
+      onChanged: (formControl) {
+        if (!formControl.invalid) {
+          widget.onChanged?.call(formControl);
+        }
+      },
+      valueAccessor: widget.includeFraction
+          ? DoubleNeglectFractionZeroValueAccessor()
+          : null,
+      validationMessages: {
+        ValidationMessage.required: (_) =>
+            '${ValidationMessage.required} ${widget.includeFraction ? '' : 'decimal'} number',
+        ValidationMessage.min: (_) => '${ValidationMessage.min}: ${widget.min}',
+        ValidationMessage.max: (_) => '${ValidationMessage.max}: ${widget.max}',
       },
       maxLines: null,
       toolbarOptions: const ToolbarOptions(

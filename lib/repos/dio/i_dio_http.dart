@@ -13,6 +13,7 @@ abstract class IHttpClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     bool requiresToken = false,
+    bool requiresMobileNumber = false,
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   });
@@ -22,6 +23,7 @@ abstract class IHttpClient {
     data,
     Map<String, dynamic>? queryParameters,
     bool requiresToken = false,
+    bool requiresMobileNumber = false,
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,

@@ -17,13 +17,15 @@ import 'i_dio_http.dart';
 import 'interceptors/dio_app_interceptor.dart';
 import 'interceptors/dio_caching_interceptor.dart';
 import 'interceptors/dio_retry_interceptor.dart';
+// ignore_for_file: constant_identifier_names
 
 class DioCustomHeader {
   static const REQUIRES_TOKEN = "requiresToken";
+  static const REQUIRES_MOBILE_NO = "requiresMobileNo";
 }
 
 class HttpClient implements IHttpClient {
-  final _storage = new FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
   final GetConnectionStatus connectivity;
   final WatchConnectionStatusChanges connectionStatusChanges;
   HttpClient(
@@ -76,14 +78,18 @@ class HttpClient implements IHttpClient {
   Future<Either<Failure, Response>> get(String path,
       {Map<String, dynamic>? queryParameters,
       bool requiresToken = false,
+      bool requiresMobileNumber = false,
       CancelToken? cancelToken,
       ProgressCallback? onReceiveProgress}) {
-    return _request(path,
-        method: 'GET',
-        queryParameters: queryParameters,
-        cancelToken: cancelToken,
-        onReceiveProgress: onReceiveProgress,
-        requiresToken: requiresToken);
+    return _request(
+      path,
+      method: 'GET',
+      queryParameters: queryParameters,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      requiresToken: requiresToken,
+      requiresMobileNumber: requiresMobileNumber,
+    );
   }
 
   @override
@@ -91,6 +97,7 @@ class HttpClient implements IHttpClient {
       {data,
       Map<String, dynamic>? queryParameters,
       bool requiresToken = false,
+      bool requiresMobileNumber = false,
       CancelToken? cancelToken,
       ProgressCallback? onSendProgress,
       ProgressCallback? onReceiveProgress}) {
@@ -103,6 +110,7 @@ class HttpClient implements IHttpClient {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
       requiresToken: requiresToken,
+      requiresMobileNumber: requiresMobileNumber,
     );
   }
 
@@ -113,6 +121,7 @@ class HttpClient implements IHttpClient {
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     bool requiresToken = false,
+    bool requiresMobileNumber = false,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
@@ -124,11 +133,9 @@ class HttpClient implements IHttpClient {
           data: data,
           queryParameters: queryParameters,
           cancelToken: cancelToken,
-          options: !requiresToken
-              ? Options(method: method)
-              : Options(
-                  method: method,
-                  headers: {DioCustomHeader.REQUIRES_TOKEN: true}),
+          options: Options(
+              method: method,
+              headers: _getDefaultHeaders(requiresToken, requiresMobileNumber)),
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress,
         ),
@@ -145,5 +152,17 @@ class HttpClient implements IHttpClient {
       }
       return Left(HttpFailure(message: e.error.message));
     }
+  }
+
+  Map<String, dynamic>? _getDefaultHeaders(
+      bool requiresToken, bool requiresMobileNumber) {
+    Map<String, dynamic> map = {};
+    if (requiresToken) {
+      map[DioCustomHeader.REQUIRES_TOKEN] = true;
+    }
+    if (requiresMobileNumber) {
+      map[DioCustomHeader.REQUIRES_MOBILE_NO] = true;
+    }
+    return map.isEmpty ? null : map;
   }
 }

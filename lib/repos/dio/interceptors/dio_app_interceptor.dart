@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:restaurant_orders/core/resources/resources.dart';
 
 import '../../../core/exceptions_and_failures/exceptions_and_failures.dart';
 import '../../../core/resources/cache_manager.dart';
@@ -19,25 +22,32 @@ class DioAppInterceptor extends InterceptorsWrapper {
       DioCustomHeader.REQUIRES_TOKEN,
     )) {
       options.headers.remove(DioCustomHeader.REQUIRES_TOKEN);
+      final String? value = await _storage.read(key: CacheManager.kTokenKey);
+      if (value != null) {
+        options.queryParameters[StringConstants.kRRNoKey] = value;
+      }
+    }
+    if (options.headers.containsKey(
+      DioCustomHeader.REQUIRES_MOBILE_NO,
+    )) {
+      options.headers.remove(DioCustomHeader.REQUIRES_MOBILE_NO);
       final String? value =
           await _storage.read(key: CacheManager.kMobileNumberKey);
       if (value != null) {
-        options.queryParameters['MobileNumber'] = value;
+        options.queryParameters[StringConstants.kMobileNumberKey] = value;
       }
-      return handler.next(options);
-    } else {
-      return handler.next(options);
     }
+    return handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (response.data is Map<String, dynamic>) {
-      if (response.data['isSuccess'] != true) {
+    if (response.data != null && response.data is Map<String, dynamic>) {
+      if (_checkHasError(response.data)) {
         return handler.reject(
           DioError(
             requestOptions: response.requestOptions,
-            response: response..statusCode = 403,
+            response: response..statusCode = 200,
             type: DioErrorType.response,
           ),
           true,
@@ -46,12 +56,13 @@ class DioAppInterceptor extends InterceptorsWrapper {
       return handler.next(response);
     } else {
       return handler.reject(
-          DioError(
-            requestOptions: response.requestOptions,
-            response: response,
-            type: DioErrorType.response,
-          ),
-          true);
+        DioError(
+          requestOptions: response.requestOptions,
+          response: response..statusCode = 200,
+          type: DioErrorType.response,
+        ),
+        true,
+      );
     }
   }
 
@@ -70,22 +81,15 @@ class DioAppInterceptor extends InterceptorsWrapper {
       case DioErrorType.response:
         String? customErrorMsg;
         if (err.response != null &&
+            err.response!.data != null &&
             err.response!.data is Map<String, dynamic>) {
-          var msg = err.response!.data["message"];
-          if (msg is String?) {
-            customErrorMsg =
-                (msg?.toLowerCase() == 'null' || (msg?.trim().isEmpty ?? false))
-                    ? null
-                    : msg;
-          }
+          customErrorMsg = _parseResultMessage(err.response!.data);
         }
         if (err.response?.statusCode == 403) {
-          final String? value =
-              await _storage.read(key: CacheManager.kMobileNumberKey);
-          err.error = UnAuthorizedException(
-              value == null ? null : customErrorMsg ?? _sessionExpiredMessage);
+          err.error =
+              UnAuthorizedException(customErrorMsg ?? _sessionExpiredMessage);
         } else if (err.response?.statusCode == 200) {
-          err.error = ServerException(customErrorMsg);
+          err.error = UnAuthorizedException(customErrorMsg);
         } else {
           err.error = ServerException(
               customErrorMsg ?? err.response?.statusMessage.toString());
@@ -98,5 +102,26 @@ class DioAppInterceptor extends InterceptorsWrapper {
         break;
     }
     return handler.next(err);
+  }
+
+  bool _checkHasError(Map<String, dynamic> responseData) {
+    return responseData['isSuccess'] != true;
+  }
+
+  String? _parseResultMessage(Map<String, dynamic> responseData) {
+    dynamic msg;
+    try {
+      msg = responseData["result"] == null
+          ? null
+          : jsonDecode(responseData["result"]);
+    } on Exception {
+      msg = responseData["result"];
+    }
+    if (msg is String?) {
+      return (msg?.toLowerCase() == 'null' || (msg?.trim().isEmpty ?? false))
+          ? null
+          : msg;
+    }
+    return null;
   }
 }

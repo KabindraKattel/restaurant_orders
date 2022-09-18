@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:uuid/uuid.dart';
 
 import 'menu_item_model.dart';
 
@@ -7,10 +6,8 @@ class OrderModel extends Equatable {
   int? id;
   String? tableName;
   DateTime? createdAt;
-  OrderType orderType;
+  OrderType orderType = OrderType.newRecent;
   Map<int, MenuItemModel> menuItems;
-  final String _rrNumber = const Uuid().v4();
-  String get rrNumber => _rrNumber;
 
   static OrderModel? _instance;
 

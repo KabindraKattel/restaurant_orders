@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 
@@ -11,15 +13,25 @@ typedef ModelPagedListViewItemBuilder<Model> = Widget Function(
   int index,
 );
 
+typedef ModelPagedListViewSlidableItemBuilder<Model> = Slidable? Function(
+  BuildContext context,
+  Model model,
+  int index,
+  Widget child,
+);
+
 class ModelPagedListView<Model> extends StatefulWidget {
   final List<Model> items;
   final int pageSize;
+  final Widget? floatingActionButton;
   final ModelPagedListViewItemBuilder<Model> itemBuilder;
+  final ModelPagedListViewSlidableItemBuilder<Model>? slidableItemBuilder;
   final ScrollController? scrollController;
   final Axis scrollDirection;
   final String? noDataFoundMessage;
   final ScrollPhysics? scrollPhysics;
   final bool shrinkWrap;
+  final bool reverse;
   final EdgeInsets? padding;
   final WidgetBuilder? noItemsFoundIndicatorBuilder;
 
@@ -28,13 +40,16 @@ class ModelPagedListView<Model> extends StatefulWidget {
     required this.items,
     required this.pageSize,
     required this.itemBuilder,
+    this.slidableItemBuilder,
     this.scrollController,
     this.scrollDirection = Axis.vertical,
     this.scrollPhysics,
     this.noDataFoundMessage,
     this.shrinkWrap = false,
+    this.reverse = false,
     this.padding,
     this.noItemsFoundIndicatorBuilder,
+    this.floatingActionButton,
   }) : super(key: key);
 
   @override
@@ -43,16 +58,8 @@ class ModelPagedListView<Model> extends StatefulWidget {
 }
 
 class _ModelPagedListViewState<Model> extends State<ModelPagedListView<Model>> {
-  late final PagingController<int, Model> _pagingController =
+  final PagingController<int, Model> _pagingController =
       PagingController(firstPageKey: 0);
-
-  @override
-  void didUpdateWidget(covariant ModelPagedListView<Model> oldWidget) {
-    if (widget.items != oldWidget.items) {
-      _pagingController.refresh();
-    }
-    super.didUpdateWidget(oldWidget);
-  }
 
   @override
   void initState() {
@@ -60,6 +67,20 @@ class _ModelPagedListViewState<Model> extends State<ModelPagedListView<Model>> {
       _fetchPage(pageKey);
     });
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant ModelPagedListView<Model> oldWidget) {
+    if (!listEquals(widget.items, oldWidget.items)) {
+      _pagingController.refresh();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchPage(int pageKey) async {
@@ -79,44 +100,68 @@ class _ModelPagedListViewState<Model> extends State<ModelPagedListView<Model>> {
   }
 
   @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return _buildPagedListView();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return PagedListView<int, Model>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Model>(
-          itemBuilder: widget.itemBuilder,
-          noItemsFoundIndicatorBuilder: widget.noItemsFoundIndicatorBuilder ??
-              (parentContext) => Builder(builder: (builderContext) {
-                    return FutureBuilder(
-                        future: Future.delayed(DurationConstants.kZero),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return SizedBox(
-                              height: (parentContext.findRenderObject()
-                                      as RenderSliverSingleBoxAdapter?)
-                                  ?.constraints
-                                  .viewportMainAxisExtent,
-                              child: NoDataFound(
-                                message: widget.noDataFoundMessage,
-                              ),
-                            );
-                          } else {
-                            return Container();
-                          }
-                        });
-                  })),
-      scrollController: widget.scrollController,
-      scrollDirection: widget.scrollDirection,
-      physics:
-          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-      shrinkWrap: widget.shrinkWrap,
-      padding: widget.padding,
+  Widget _buildPagedListView() {
+    return Column(
+      children: [
+        Flexible(
+          child: SlidableAutoCloseBehavior(
+            child: PagedListView<int, Model>(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              reverse: widget.reverse,
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<Model>(
+                  itemBuilder: (context, item, index) {
+                    var nonSlidableChild =
+                        widget.itemBuilder(context, item, index);
+                    final child = widget.slidableItemBuilder == null
+                        ? nonSlidableChild
+                        : widget.slidableItemBuilder!(
+                                context, item, index, nonSlidableChild) ??
+                            nonSlidableChild;
+                    return child;
+                  },
+                  noItemsFoundIndicatorBuilder: widget
+                          .noItemsFoundIndicatorBuilder ??
+                      (parentContext) => Builder(builder: (builderContext) {
+                            return FutureBuilder(
+                                future: Future.delayed(DurationConstants.kZero),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return Container(
+                                      height: (parentContext.findRenderObject()
+                                              as RenderSliverSingleBoxAdapter?)
+                                          ?.constraints
+                                          .viewportMainAxisExtent,
+                                      child: NoDataFound(
+                                        message: widget.noDataFoundMessage,
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                });
+                          })),
+              scrollController: widget.scrollController,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.scrollPhysics ??
+                  const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
+              shrinkWrap: widget.shrinkWrap,
+              padding: widget.padding,
+            ),
+          ),
+        ),
+        if (widget.floatingActionButton != null)
+          Container(
+              color: ColorConstants.kTransparent,
+              alignment: Alignment.bottomRight,
+              child: widget.floatingActionButton!)
+      ],
     );
   }
 }

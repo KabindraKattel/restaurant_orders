@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/repos/dio/i_dio_http.dart';
+import 'package:uuid/uuid.dart';
 
 import 'auth_repo.dart';
 
@@ -46,6 +47,8 @@ class AuthRepoImpl implements AuthRepo {
           await _storage.write(
               key: CacheManager.kMobileNumberKey,
               value: jsonDecode(response.data?['result'] ?? '{}')?['Mobile']);
+          await _storage.write(
+              key: CacheManager.kTokenKey, value: const Uuid().v4());
           return const Right(null);
         } on Exception {
           throw DatabaseException();

@@ -19,15 +19,6 @@ class AuthGuardPage extends ConsumerStatefulWidget {
 class _AuthGuardPageState extends ConsumerState<AuthGuardPage> {
   @override
   Widget build(BuildContext context) {
-    //menu-list
-    // ref.listen<AuthState>(authNotifierProvider, (previous, next) {
-    //   next.maybeWhen(
-    //     orElse: () {},
-    //     authenticated: () async {
-    //       ref.refresh(studentProfileNotifierProvider);
-    //     },
-    //   );
-    // });
     return WillPopPage(
       child: Consumer(builder: (context, ref, child) {
         final authState = ref.watch(authNotifierProvider);

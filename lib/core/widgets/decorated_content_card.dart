@@ -28,55 +28,55 @@ class DecoratedContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var child = Padding(
+      padding: contentPadding,
+      child: Column(
+        children: [
+          content,
+          if (actions != null)
+            Padding(
+              padding: titlePadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: actions!
+                    .map(
+                      (e) => Expanded(
+                        child: Row(children: [
+                          Expanded(child: e),
+                          if (actions!.indexOf(e) != actions!.length - 1)
+                            SizedBox(
+                              width: contentPadding.horizontal / 2,
+                            ),
+                        ]),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+        ],
+      ),
+    );
+    var column = Column(
+      children: [
+        Container(
+            padding: titlePadding,
+            decoration: ShapeDecoration(
+                shape: StylesConstants.kCardTitleShape, color: titleBgColor),
+            child: title),
+        child,
+      ],
+    );
     return Card(
       elevation: elevation,
       shape: StylesConstants.kCardShape,
       color: contentBgColor,
-      child: SizedBox(
-        width: double.infinity,
-        height: height,
-        child: Column(
-          children: [
-            Container(
-                padding: titlePadding,
-                decoration: ShapeDecoration(
-                    shape: StylesConstants.kCardTitleShape,
-                    color: titleBgColor),
-                child: title),
-            Expanded(
-              child: Padding(
-                padding: contentPadding,
-                child: Column(
-                  children: [
-                    Expanded(child: content),
-                    if (actions != null)
-                      Padding(
-                        padding: titlePadding,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: actions!
-                              .map(
-                                (e) => Expanded(
-                                  child: Row(children: [
-                                    Expanded(child: e),
-                                    if (actions!.indexOf(e) !=
-                                        actions!.length - 1)
-                                      SizedBox(
-                                        width: contentPadding.horizontal / 2,
-                                      ),
-                                  ]),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+      child: height == null
+          ? column
+          : SizedBox(
+              width: double.infinity,
+              height: height,
+              child: column,
             ),
-          ],
-        ),
-      ),
     );
   }
 }

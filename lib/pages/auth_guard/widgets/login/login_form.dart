@@ -135,7 +135,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 ),
                                 hintText: StringConstants.kMobileNumberLabel,
                               ),
-                              onSubmitted: () {
+                              onSubmitted: (_) {
                                 form.control(StringConstants.kFPinKey).focus();
                               },
                             ),
@@ -180,7 +180,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                 ),
                                 hintText: StringConstants.kFPinLabel,
                               ),
-                              onSubmitted: () {
+                              onSubmitted: (_) {
                                 var userNameControl = form
                                     .control(StringConstants.kMobileNumberKey);
                                 if (userNameControl.value == null ||
