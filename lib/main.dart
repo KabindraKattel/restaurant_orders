@@ -21,7 +21,12 @@ Future<void> main() async {
   packageInfo = await PackageInfo.fromPlatform();
   Hive.init(await FileUtils.getCacheDirPath());
   await Hive.openLazyBox<Map>(CacheManager.kAppCache);
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ProviderScope(
+      // observers: [AppLocalStateLogger()],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

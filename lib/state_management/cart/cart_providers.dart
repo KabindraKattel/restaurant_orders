@@ -1,32 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurant_orders/models/models.dart';
+import 'package:restaurant_orders/models/menu_item_model.dart';
+import 'package:restaurant_orders/state_management/cart/cart_order_notifier.dart';
+import 'package:restaurant_orders/state_management/cart/cart_order_state.dart';
+import 'package:restaurant_orders/state_management/cart/find_cart_item_notifier.dart';
+import 'package:restaurant_orders/state_management/cart/find_cart_item_state.dart';
 import 'package:restaurant_orders/state_management/shared/provider.dart';
 
 import 'cart_items_notifier.dart';
 import 'cart_items_state.dart';
 
 final cartNotifierProvider =
-    StateNotifierProvider.family<CartItemsNotifier, CartItemsState, OrderModel>(
-  (ref, cartModel) => CartItemsNotifier(
-    ref.watch(cartRepoProvider(cartModel)),
+    StateNotifierProvider<CartItemsNotifier, CartItemsState>(
+  (ref) => CartItemsNotifier(
+    ref.watch(cartRepoProvider),
   ),
 );
 
-// final cartInvalidFormControlProvider = StateProvider.autoDispose<FormControl?>(
-//   (ref) => null,
-// );
+final findCartItemNotifierProvider = StateNotifierProvider.family
+    .autoDispose<FindCartItemNotifier, FindCartItemState, MenuItemModel>(
+  (ref, item) => FindCartItemNotifier(
+    ref.watch(cartRepoProvider),
+    item,
+  ),
+);
 
-final findCartItemProvider = Provider.family
-    .autoDispose<MenuItemModel?, OrderModelWithMenuItem>(
-        (ref, orderModelWithMenuItem) {
-  return ref
-      .watch(cartRepoProvider(orderModelWithMenuItem.orderModel))
-      .findMenuItemFromCart(orderModelWithMenuItem.menuItemModel);
-});
-
-class OrderModelWithMenuItem {
-  final OrderModel orderModel;
-  final MenuItemModel menuItemModel;
-
-  OrderModelWithMenuItem(this.orderModel, this.menuItemModel);
-}
+final cartOrderNotifierProvider =
+    StateNotifierProvider<CartOrderNotifier, CartOrderState>(
+  (ref) => CartOrderNotifier(
+    ref.watch(cartNotifierProvider),
+  ),
+);

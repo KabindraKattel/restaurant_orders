@@ -19,6 +19,7 @@ class WillPopPage extends StatelessWidget {
               barrierColor: ColorConstants.kErrorRed.withOpacity(0.5),
               builder: (context) {
                 return ConfirmationAlertDialog(
+                    isDanger: false,
                     content: Text(
                       "Do you want to exit from ${packageInfo.appName} ?",
                       style: const TextStyle(
@@ -28,6 +29,7 @@ class WillPopPage extends StatelessWidget {
                     ),
                     onContinue: () async {
                       await SystemNavigator.pop();
+                      return true;
                       // exit(0);
                     });
               });

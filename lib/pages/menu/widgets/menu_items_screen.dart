@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurant_orders/core/extensions/num_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/core/widgets/counter.dart';
 import 'package:restaurant_orders/core/widgets/tabulated_list.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
+import 'package:restaurant_orders/pages/menu/widgets/menu_item_info_text_screen.dart';
+import 'package:restaurant_orders/pages/menu/widgets/menu_items_counter_screen.dart';
 
 class MenuItemsScreen extends ConsumerWidget {
-  final Map<int, MenuItemModel> menuItemModel;
-  final OrderModel orderModel;
+  final List<MenuItemModel> menuItemModel;
   final String itemHeaderName;
 
   ///false: rateMode
@@ -20,7 +18,6 @@ class MenuItemsScreen extends ConsumerWidget {
   const MenuItemsScreen({
     Key? key,
     required this.menuItemModel,
-    required this.orderModel,
     this.isTotalMode = false,
     this.itemHeaderName = StringConstants.kItemKey,
     this.rateOrTotalHeaderName,
@@ -28,110 +25,51 @@ class MenuItemsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (!Navigator.of(context).canPop()) {
-          return false;
+    return TabulatedList<int, MenuItemModel>(
+      noDataFoundMessage: MessageConstants.kNoMenuItems,
+      tablePadding: const EdgeInsets.all(SpacingConstants.kS16),
+      tableCellPadding: const EdgeInsets.all(SpacingConstants.kS8),
+      noOfColumns: 3,
+      rows: menuItemModel.asMap(),
+      columnWidthBuilder: (column) {
+        if (column == 1) {
+          return const FixedColumnWidth(130);
         }
-        ref.read(cartNotifierProvider(orderModel).notifier).reset();
-        return true;
+        return const FlexColumnWidth(1);
       },
-      child: TabulatedList<int, MenuItemModel>(
-        tablePadding: const EdgeInsets.all(SpacingConstants.kS16),
-        tableCellPadding: const EdgeInsets.all(SpacingConstants.kS8),
-        noOfColumns: 3,
-        rows: menuItemModel,
-        columnWidthBuilder: (column) {
-          if (column == 1) {
-            return const FixedColumnWidth(130);
-          }
-          return const FlexColumnWidth(1);
-        },
-        tableCellBuilder: (item, row, column) {
-          if (column == 0) {
-            return Text(
-              item.itemName ?? '',
-              style: const TextStyle(
-                fontSize: StylesConstants.kSubTitleSize,
-                fontWeight: StylesConstants.kSubTitleWeight,
-              ),
-            );
-          } else if (column == 1) {
-            // return Consumer(builder: (context, ref, child) {
-            final model = ref.watch(
-              findCartItemProvider(
-                OrderModelWithMenuItem(orderModel, item),
-              ),
-            );
-            return _buildCounter(ref, model ?? item);
-            // });
-          } else {
-            return isTotalMode
-                ? Consumer(builder: (context, ref, child) {
-                    final model = ref.watch(
-                      findCartItemProvider(
-                        OrderModelWithMenuItem(orderModel, item),
-                      ),
-                    );
-                    return _buildInfoText(
-                        ((model ?? item).quantity * (item.rate ?? 0))
-                            .neglectFractionZero());
-                  })
-                : _buildInfoText(item.rate?.toString() ?? '');
-          }
-        },
-        headerBuilder: (column) {
+      tableCellBuilder: (item, row, column) {
+        if (column == 0) {
           return Text(
-            column == 0
-                ? itemHeaderName
-                : column == 1
-                    ? ''
-                    : rateOrTotalHeaderName ??
-                        (isTotalMode
-                            ? StringConstants.kTotalKey
-                            : StringConstants.kRateKey),
-            textAlign: TextAlign.start,
+            item.itemName ?? '',
             style: const TextStyle(
-                fontSize: StylesConstants.kTitleSize,
-                fontWeight: StylesConstants.kTitleWeight),
+              fontSize: StylesConstants.kSubTitleSize,
+              fontWeight: StylesConstants.kSubTitleWeight,
+            ),
           );
-        },
-      ),
-    );
-  }
-
-  Text _buildInfoText(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.start,
-      style: const TextStyle(
-        fontSize: StylesConstants.kSubTitleSize,
-        fontWeight: StylesConstants.kSubTitleWeight,
-      ),
-    );
-  }
-
-  Counter _buildCounter(WidgetRef ref, MenuItemModel item) {
-    return Counter(
-      initial: item.quantity,
-      includeFraction: true,
-      countStyle: const TextStyle(
-        fontSize: StylesConstants.kSubTitleSize,
-        fontWeight: StylesConstants.kSubTitleWeight,
-      ),
-      onChanged: (formControl) async {
-        if (formControl.value != null) {
-          // ref.refresh(cartInvalidFormControlProvider);
-          if (formControl.value == 0) {
-            await ref
-                .read(cartNotifierProvider(orderModel).notifier)
-                .removeFromCart(item);
-          } else {
-            await ref
-                .read(cartNotifierProvider(orderModel).notifier)
-                .saveToCart(item..quantity = formControl.value!.toDouble());
-          }
+        } else if (column == 1) {
+          return MenuItemsCounterScreen(model: item);
+        } else {
+          return MenuItemInfoTextScreen(
+            model: item,
+            isTotalMode: isTotalMode,
+          );
         }
+      },
+      headerBuilder: (column) {
+        return Text(
+          column == 0
+              ? itemHeaderName
+              : column == 1
+                  ? ''
+                  : rateOrTotalHeaderName ??
+                      (isTotalMode
+                          ? StringConstants.kTotalKey
+                          : StringConstants.kRateKey),
+          textAlign: TextAlign.start,
+          style: const TextStyle(
+              fontSize: StylesConstants.kTitleSize,
+              fontWeight: StylesConstants.kTitleWeight),
+        );
       },
     );
   }

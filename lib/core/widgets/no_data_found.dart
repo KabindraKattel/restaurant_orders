@@ -16,7 +16,7 @@ class NoDataFound extends StatelessWidget {
           children: [
             const Spacer(),
             Text(
-              message ?? MessageConstants.kNoDate,
+              message ?? MessageConstants.kNoData,
               style: const TextStyle(
                   fontSize: StylesConstants.kTitleSize,
                   fontWeight: StylesConstants.kTitleWeight,

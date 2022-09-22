@@ -9,23 +9,24 @@ import 'package:restaurant_orders/state_management/menu/menu_items/menu_items_pr
 
 import 'menu_items_screen.dart';
 
-class MenuScreen extends ConsumerWidget {
+class MenuScreen extends ConsumerStatefulWidget {
   final List<MenuGroupModel> menuGroupModel;
-  final OrderModel orderModel;
   final String? menuTab;
-  const MenuScreen(
-      {Key? key,
-      required this.menuGroupModel,
-      required this.orderModel,
-      this.menuTab})
+  const MenuScreen({Key? key, required this.menuGroupModel, this.menuTab})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends ConsumerState<MenuScreen> {
+  @override
+  Widget build(BuildContext context) {
     return ChoiceChipTabView(
-      initialIndex: _getTabIndex(menuTab),
+      initialIndex: _getTabIndex(widget.menuTab),
+      noDataFoundMessage: MessageConstants.kNoMenu,
       tabBarColor: ColorConstants.kCategoryButtonBarColor,
-      choiceChipTabViewData: menuGroupModel.asMap().map(
+      choiceChipTabViewData: widget.menuGroupModel.asMap().map(
             (key, value) => MapEntry(
               value.groupName ?? '',
               Consumer(builder: (context, ref, child) {
@@ -37,8 +38,8 @@ class MenuScreen extends ConsumerWidget {
                     onRefresh: () async => ref.refresh(
                         menuItemsNotifierProvider(value.groupName ?? '')),
                     child: MenuItemsScreen(
-                      menuItemModel: model.asMap(),
-                      orderModel: orderModel,
+                      menuItemModel: model,
+                      // orderModel: orderModel,
                     ),
                   ),
                   error: (failure, onRetry) => MyErrorWidget(
@@ -53,8 +54,8 @@ class MenuScreen extends ConsumerWidget {
   }
 
   int _getTabIndex(String? menuTab) {
-    for (int i = 0; i < menuGroupModel.length; i++) {
-      if (menuGroupModel[i].groupName == menuTab) {
+    for (int i = 0; i < widget.menuGroupModel.length; i++) {
+      if (widget.menuGroupModel[i].groupName == menuTab) {
         return i;
       }
     }

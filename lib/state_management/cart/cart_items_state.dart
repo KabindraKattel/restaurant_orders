@@ -1,15 +1,19 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dartz/dartz.dart';
+import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/models/models.dart';
 
-part 'cart_items_state.freezed.dart';
+class CartItemsState {
+  final Either<Failure, List<MenuItemModel>> cartItems;
+  const CartItemsState._(this.cartItems);
 
-@freezed
-class CartItemsState with _$CartItemsState {
-  const factory CartItemsState._({
-    required OrderModel? model,
-  }) = _CartItemsState;
+  factory CartItemsState.initial() => const CartItemsState._(Right([]));
 
-  factory CartItemsState.initial() => const CartItemsState._(
-        model: null,
-      );
+  CartItemsState copyWith(Either<Failure, List<MenuItemModel>> cartItems) {
+    return CartItemsState._(cartItems);
+  }
+
+  @override
+  String toString() {
+    return '${cartItems.fold((l) => [], (r) => r)}';
+  }
 }

@@ -7,28 +7,31 @@ class CrudRepoImpl<Model> implements CrudRepo<Model> {
   final List<Model> _items = [];
 
   @override
-  Future<Either<Failure, bool>> findItem(Model item,
+  Future<Either<Failure, Model>> findItem(Model item,
       {bool Function(Model item)? filter}) async {
     try {
-      return Right(
-          _items.any((element) => filter?.call(element) ?? element == item));
+      return Right(_items
+          .firstWhere((element) => filter?.call(element) ?? element == item));
+    } on StateError {
+      return const Left(CrudFailure());
     } on Exception {
-      return Left(OtherFailure());
+      return const Left(OtherFailure());
     }
   }
 
   @override
   Future<Either<Failure, List<Model>>> saveItem(Model item,
       {bool Function(Model item)? filter}) async {
-    return (await findItem(item, filter: filter)).fold((l) => Left(l),
-        (found) async {
-      try {
-        if (found) {
-          return Right(_items);
-        }
+    return (await findItem(item, filter: filter)).fold((l) {
+      if (l is CrudFailure) {
         return Right(_items..add(item));
+      }
+      return Left(l);
+    }, (found) async {
+      try {
+        return Right(_items);
       } on Exception {
-        return Left(OtherFailure());
+        return const Left(OtherFailure());
       }
     });
   }
@@ -40,7 +43,7 @@ class CrudRepoImpl<Model> implements CrudRepo<Model> {
       return Right(_items
         ..removeWhere((element) => filter?.call(element) ?? element == item));
     } on Exception {
-      return Left(OtherFailure());
+      return const Left(OtherFailure());
     }
   }
 
@@ -70,7 +73,7 @@ class CrudRepoImpl<Model> implements CrudRepo<Model> {
     try {
       return Right(_items);
     } on Exception {
-      return Left(OtherFailure());
+      return const Left(OtherFailure());
     }
   }
 }

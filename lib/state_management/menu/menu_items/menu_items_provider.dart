@@ -5,5 +5,6 @@ import 'package:restaurant_orders/state_management/shared/provider.dart';
 
 final menuItemsNotifierProvider =
     StateNotifierProvider.family<MenuItemsNotifier, MenuItemsState, String>(
-        (ref, menuGroupName) =>
-            MenuItemsNotifier(ref.watch(menuRepoProvider), menuGroupName));
+        (ref, menuGroupName) {
+  return MenuItemsNotifier(ref.watch(menuRepoProvider), menuGroupName);
+});

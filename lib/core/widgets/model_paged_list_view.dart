@@ -132,7 +132,7 @@ class _ModelPagedListViewState<Model> extends State<ModelPagedListView<Model>> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.done) {
-                                    return Container(
+                                    return SizedBox(
                                       height: (parentContext.findRenderObject()
                                               as RenderSliverSingleBoxAdapter?)
                                           ?.constraints

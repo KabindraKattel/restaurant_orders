@@ -62,7 +62,8 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
-      await _storage.deleteAll();
+      await _storage.delete(key: CacheManager.kMobileNumberKey);
+      await _storage.delete(key: CacheManager.kTokenKey);
       await Hive.lazyBox<Map>(CacheManager.kAppCache).clear();
       return const Right(null);
     } on Exception {

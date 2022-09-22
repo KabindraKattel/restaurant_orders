@@ -6,7 +6,7 @@ abstract class CrudRepo<Model> {
       {bool Function(Model item)? filter});
   Future<Either<Failure, List<Model>>> removeItem(Model item,
       {bool Function(Model item)? filter});
-  Future<Either<Failure, bool>> findItem(Model item,
+  Future<Either<Failure, Model>> findItem(Model item,
       {bool Function(Model item)? filter});
   Future<Either<Failure, List<Model>>> setItems(List<Model> items);
   Future<Either<Failure, List<Model>>> getItems();

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/repos/cart/cart_repo.dart';
-import 'package:restaurant_orders/repos/cart/cart_repo_impl.dart';
+import 'package:restaurant_orders/repos/crud/crud_repo.dart';
+import 'package:restaurant_orders/repos/crud/crud_repo_impl.dart';
 import 'package:restaurant_orders/repos/menu/menu_repo.dart';
 import 'package:restaurant_orders/repos/menu/menu_repo_impl.dart';
 import 'package:restaurant_orders/repos/menu/menu_repo_local_impl.dart';
@@ -20,6 +20,4 @@ final orderRepoProvider = Provider<OrderRepo>((ref) {
 });
 
 final cartRepoProvider =
-    Provider.family<CartRepo, OrderModel>((ref, orderModel) {
-  return CartRepoImpl(orderModel);
-});
+    Provider<CrudRepo<MenuItemModel>>((ref) => CrudRepoImpl<MenuItemModel>());

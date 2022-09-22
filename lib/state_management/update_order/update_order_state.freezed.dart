@@ -24,10 +24,8 @@ class _$UpdateOrderStateTearOff {
     );
   }
 
-  UpdateOrderItemsConfirm confirm(OrderModel orderModel) {
-    return UpdateOrderItemsConfirm(
-      orderModel,
-    );
+  UpdateOrderItemsConfirm confirm() {
+    return const UpdateOrderItemsConfirm();
   }
 }
 
@@ -39,19 +37,19 @@ mixin _$UpdateOrderState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? menuTab) select,
-    required TResult Function(OrderModel orderModel) confirm,
+    required TResult Function() confirm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -161,7 +159,7 @@ class _$UpdateOrderItemsSelection implements UpdateOrderItemsSelection {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? menuTab) select,
-    required TResult Function(OrderModel orderModel) confirm,
+    required TResult Function() confirm,
   }) {
     return select(menuTab);
   }
@@ -170,7 +168,7 @@ class _$UpdateOrderItemsSelection implements UpdateOrderItemsSelection {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
   }) {
     return select?.call(menuTab);
   }
@@ -179,7 +177,7 @@ class _$UpdateOrderItemsSelection implements UpdateOrderItemsSelection {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
     required TResult orElse(),
   }) {
     if (select != null) {
@@ -235,7 +233,6 @@ abstract class $UpdateOrderItemsConfirmCopyWith<$Res> {
   factory $UpdateOrderItemsConfirmCopyWith(UpdateOrderItemsConfirm value,
           $Res Function(UpdateOrderItemsConfirm) then) =
       _$UpdateOrderItemsConfirmCopyWithImpl<$Res>;
-  $Res call({OrderModel orderModel});
 }
 
 /// @nodoc
@@ -248,79 +245,54 @@ class _$UpdateOrderItemsConfirmCopyWithImpl<$Res>
 
   @override
   UpdateOrderItemsConfirm get _value => super._value as UpdateOrderItemsConfirm;
-
-  @override
-  $Res call({
-    Object? orderModel = freezed,
-  }) {
-    return _then(UpdateOrderItemsConfirm(
-      orderModel == freezed
-          ? _value.orderModel
-          : orderModel // ignore: cast_nullable_to_non_nullable
-              as OrderModel,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$UpdateOrderItemsConfirm implements UpdateOrderItemsConfirm {
-  const _$UpdateOrderItemsConfirm(this.orderModel);
-
-  @override
-  final OrderModel orderModel;
+  const _$UpdateOrderItemsConfirm();
 
   @override
   String toString() {
-    return 'UpdateOrderState.confirm(orderModel: $orderModel)';
+    return 'UpdateOrderState.confirm()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is UpdateOrderItemsConfirm &&
-            const DeepCollectionEquality()
-                .equals(other.orderModel, orderModel));
+        (other.runtimeType == runtimeType && other is UpdateOrderItemsConfirm);
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(orderModel));
-
-  @JsonKey(ignore: true)
-  @override
-  $UpdateOrderItemsConfirmCopyWith<UpdateOrderItemsConfirm> get copyWith =>
-      _$UpdateOrderItemsConfirmCopyWithImpl<UpdateOrderItemsConfirm>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? menuTab) select,
-    required TResult Function(OrderModel orderModel) confirm,
+    required TResult Function() confirm,
   }) {
-    return confirm(orderModel);
+    return confirm();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
   }) {
-    return confirm?.call(orderModel);
+    return confirm?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? menuTab)? select,
-    TResult Function(OrderModel orderModel)? confirm,
+    TResult Function()? confirm,
     required TResult orElse(),
   }) {
     if (confirm != null) {
-      return confirm(orderModel);
+      return confirm();
     }
     return orElse();
   }
@@ -358,11 +330,5 @@ class _$UpdateOrderItemsConfirm implements UpdateOrderItemsConfirm {
 }
 
 abstract class UpdateOrderItemsConfirm implements UpdateOrderState {
-  const factory UpdateOrderItemsConfirm(OrderModel orderModel) =
-      _$UpdateOrderItemsConfirm;
-
-  OrderModel get orderModel;
-  @JsonKey(ignore: true)
-  $UpdateOrderItemsConfirmCopyWith<UpdateOrderItemsConfirm> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory UpdateOrderItemsConfirm() = _$UpdateOrderItemsConfirm;
 }

@@ -61,3 +61,10 @@ class OtherFailure implements Failure {
 
   const OtherFailure();
 }
+
+class CrudFailure implements Failure {
+  @override
+  final String message = 'Create Read Update or Delete Action Failed';
+
+  const CrudFailure();
+}

@@ -1,31 +1,30 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_orders/models/models.dart';
-import 'package:restaurant_orders/repos/cart/cart_repo.dart';
+import 'package:restaurant_orders/repos/crud/crud_repo.dart';
+import 'package:restaurant_orders/state_management/shared/cancelable_state_notifier.dart';
 
 import 'cart_items_state.dart';
 
-class CartItemsNotifier extends StateNotifier<CartItemsState> {
-  final CartRepo _repo;
+class CartItemsNotifier
+    extends CancelableStateNotifier<CartItemsState, List<MenuItemModel>> {
+  final CrudRepo<MenuItemModel> _repo;
+
   CartItemsNotifier(this._repo) : super(CartItemsState.initial());
 
   Future<void> saveToCart(
     MenuItemModel item,
   ) async {
-    await _repo.saveItemToCart(item);
-    state = state.copyWith(model: _repo.cartModel);
-  }
-
-  Future<void> getItems() async {
-    state = state.copyWith(model: _repo.cartModel);
+    state = state.copyWith(await _repo.saveItem(item,
+        filter: (i) =>
+            i.iNum != null && item.iNum != null && i.iNum == item.iNum));
   }
 
   Future<void> removeFromCart(MenuItemModel item) async {
-    await _repo.removeItemFromCart(item);
-    state = state.copyWith(model: _repo.cartModel);
+    state = state.copyWith(await _repo.removeItem(item,
+        filter: (i) =>
+            i.iNum != null && item.iNum != null && i.iNum == item.iNum));
   }
 
-  void reset() async {
-    await _repo.resetCartModel();
-    state = CartItemsState.initial();
+  Future<void> clearCart() async {
+    state = state.copyWith(await _repo.clearItems());
   }
 }

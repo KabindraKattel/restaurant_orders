@@ -38,6 +38,9 @@ class StringConstants {
   static const String kOrderDate = 'Date';
   static const String kOrderTimeGone = 'Time Gone';
 
+  static const String kServerUrl = 'Server URL';
+  static const String kServerUrlSetup = 'Server URL Setup';
+
   ///Others
   static const String kOthers = '#';
   static const String kAnonymousCustomer = '# Anonymous Customer #';

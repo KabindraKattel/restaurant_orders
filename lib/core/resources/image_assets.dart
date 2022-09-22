@@ -6,4 +6,5 @@ class ImageAssets {
   static const String kAnimatedErrorIcon = 'assets/lottie/error.json';
   static const String kAnimatedNetworkErrorIcon =
       'assets/lottie/no-internet.json';
+  static const String kAnimatedSuccessIcon = 'assets/lottie/success.json';
 }

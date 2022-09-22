@@ -4,21 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
-import 'package:restaurant_orders/models/order_model.dart';
 import 'package:restaurant_orders/pages/menu/widgets/menu_bottom_bar.dart';
 import 'package:restaurant_orders/pages/menu/widgets/menu_screen.dart';
 import 'package:restaurant_orders/state_management/menu/menu_groups/menu_groups_provider.dart';
 
 class MenuPage extends ConsumerWidget {
-  late final OrderModel orderModel;
   final String? menuTab;
-  MenuPage({
+  const MenuPage({
     Key? key,
-    OrderModel? orderModel,
     this.menuTab,
-  }) : super(key: key) {
-    this.orderModel = OrderModel.init();
-  }
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,7 +40,6 @@ class MenuPage extends ConsumerWidget {
                     data: (model) => MenuScreen(
                           menuTab: menuTab,
                           menuGroupModel: model,
-                          orderModel: orderModel,
                         ),
                     error: (failure, onRetry) => MyErrorWidget(
                           failure: failure,
@@ -54,7 +48,7 @@ class MenuPage extends ConsumerWidget {
               },
             ),
           ),
-          MenuBottomBar(orderModel: orderModel)
+          MenuBottomBar(),
         ],
       ),
     );

@@ -4,4 +4,9 @@ import 'package:restaurant_orders/models/open_order_model.dart';
 
 abstract class OrderRepo {
   Future<Either<Failure, List<OpenOrderModel>>> get openOrders;
+  Future<Either<Failure, void>> saveOrders(
+    String tableNum,
+    String iNum,
+    double quantity,
+  );
 }

@@ -38,8 +38,12 @@ class HomePage extends ConsumerWidget {
                   final state = ref.watch(openOrdersNotifierProvider);
                   return state.when(
                       loading: () => const Loading(),
-                      data: (data) => HomeScreen(
-                            model: data,
+                      data: (data) => RefreshIndicator(
+                            onRefresh: () async =>
+                                ref.refresh(openOrdersNotifierProvider),
+                            child: HomeScreen(
+                              model: data,
+                            ),
                           ),
                       error: (failure, onRetry) => MyErrorWidget(
                             failure: failure,

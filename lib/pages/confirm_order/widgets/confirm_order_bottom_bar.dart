@@ -2,33 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
-import 'package:restaurant_orders/core/extensions/map_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/bar.dart';
 import 'package:restaurant_orders/core/widgets/chip_text_input_field.dart';
 import 'package:restaurant_orders/models/order_model.dart';
 import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
+import 'package:restaurant_orders/state_management/save_cart_order/provider.dart';
 import 'package:restaurant_orders/state_management/update_order/update_order_provider.dart';
 import 'package:restaurant_orders/state_management/update_order/update_order_state.dart';
 
-class ConfirmOrderBottomBar extends ConsumerWidget {
+class ConfirmOrderBottomBar extends ConsumerStatefulWidget {
+  final OrderModel model;
   const ConfirmOrderBottomBar({
     Key? key,
-    required OrderModel model,
-  })  : _model = model,
-        super(key: key);
-
-  final OrderModel _model;
+    required this.model,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final inputFormControl = FormControl(
-      value: _model.tableName,
-      validators: [Validators.required],
-    );
+  ConsumerState<ConfirmOrderBottomBar> createState() =>
+      _ConfirmOrderBottomBarState();
+}
+
+class _ConfirmOrderBottomBarState extends ConsumerState<ConfirmOrderBottomBar> {
+  late final inputFormControl = FormControl<String>(
+    value: widget.model.tableNumber,
+    validators: [Validators.required],
+  );
+
+  @override
+  void didUpdateWidget(covariant ConfirmOrderBottomBar oldWidget) {
+    inputFormControl.value = widget.model.tableNumber;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Visibility(
-      visible: (ref.watch(cartNotifierProvider(_model)).model?.menuItems ?? {})
-          .isNotEmpty,
+      visible: ((ref.watch(cartOrderNotifierProvider).cartOrder.cartItems ?? [])
+          .isNotEmpty),
       child: Bar(
         color: ColorConstants.kActionButtonBarColor,
         padding: const EdgeInsets.symmetric(
@@ -39,7 +50,7 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _buildTableInput(inputFormControl),
+                child: _buildTableInput(true, inputFormControl),
               ),
               const SizedBox(
                 width: SpacingConstants.kS8,
@@ -51,7 +62,9 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
                 width: SpacingConstants.kS8,
               ),
               Expanded(
-                child: _buildConfirm(context, ref, inputFormControl),
+                child: Consumer(builder: (context, ref, _) {
+                  return _buildConfirm(context, inputFormControl);
+                }),
               ),
             ],
           ),
@@ -60,47 +73,47 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
     );
   }
 
-  ActionChip _buildConfirm(BuildContext context, WidgetRef ref,
-      FormControl<String> inputFormControl) {
-    return ActionChip(
-      backgroundColor: Theme.of(context).primaryColor,
-      onPressed: () {
-        // final invalidControl =
-        //     ref.read(cartInvalidFormControlProvider);
-        // if (invalidControl == null) {
-        //   print("ALL OK");
-        // } else {
-        //   invalidControl.markAsTouched();
-        // }
-        if (inputFormControl.invalid) {
-          inputFormControl.markAsTouched();
-        } else {
-          print(ref
-              .read(cartNotifierProvider(_model))
-              .model!
-              .toJson()
-              .prettify());
-        }
-      },
-      label: SizedBox(
-        width: double.infinity,
-        child: Text(
-          StringConstants.kConfirm,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Theme.of(context).primaryColor.getForegroundColor(),
-              fontSize: StylesConstants.kTitleSize,
-              fontWeight: StylesConstants.kTitleWeight),
-        ),
-      ),
-    );
+  Widget _buildConfirm(
+      BuildContext context, FormControl<String> inputFormControl) {
+    return ReactiveValueListenableBuilder(
+        formControl: inputFormControl,
+        builder: (context, control, _) {
+          return ActionChip(
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              if (control.invalid) {
+                // inputFormControl.value = '777';
+                // model.tableNumber=inputFormControl.value;
+                inputFormControl.markAsTouched();
+              } else {
+                ref
+                    .read(saveCartOrderNotifierProvider.notifier)
+                    .save(widget.model);
+              }
+            },
+            label: SizedBox(
+              width: double.infinity,
+              child: Text(
+                StringConstants.kConfirm,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor.getForegroundColor(),
+                    fontSize: StylesConstants.kTitleSize,
+                    fontWeight: StylesConstants.kTitleWeight),
+              ),
+            ),
+          );
+        });
   }
 
-  ChipInputTextField _buildTableInput(FormControl<String> inputFormControl) {
+  ChipInputTextField _buildTableInput(
+      bool init, FormControl<String> inputFormControl) {
     return ChipInputTextField(
       formControl: inputFormControl,
-      onChanged: (control) async {
-        _model.tableName = control.value;
+      onChanged: (formControl) async {
+        await ref
+            .read(cartOrderNotifierProvider.notifier)
+            .getOrder(tableNum: formControl.value);
       },
     );
   }
@@ -110,11 +123,10 @@ class ConfirmOrderBottomBar extends ConsumerWidget {
       backgroundColor: ColorConstants.kWhite,
       onPressed: () {
         final controller = ref.read(updateOrderStateProvider.state);
-        final orderModel = ref.read(cartNotifierProvider(_model)).model;
+        final cartItems =
+            ref.read(cartNotifierProvider).cartItems.fold((l) => [], (r) => r);
         controller.state = UpdateOrderState.select(
-            (orderModel?.menuItems.isEmpty ?? true)
-                ? null
-                : orderModel!.menuItems.values.last.groupName);
+            (cartItems.isEmpty) ? null : cartItems.last.groupName);
       },
       label: SizedBox(
         width: double.infinity,

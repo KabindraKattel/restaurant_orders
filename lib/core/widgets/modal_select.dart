@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/core/resources/styles_constants.dart';
 
 class ModalSelect<Type> extends StatefulWidget {
   final String title;

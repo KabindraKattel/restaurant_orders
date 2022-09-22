@@ -5,7 +5,7 @@
 
 class MenuItemModel {
   String? itemName;
-  final int? iNum;
+  int? iNum;
   double? rate;
   double quantity;
   String? groupName;
@@ -29,16 +29,19 @@ class MenuItemModel {
   }
 
   MenuItemModel copyWith({
+    int? iNum,
     String? itemName,
     double? rate,
     double? quantity,
     String? groupName,
   }) {
-    this.itemName = itemName ?? this.itemName;
-    this.rate = rate ?? this.rate;
-    this.quantity = quantity ?? this.quantity;
-    this.groupName = groupName ?? this.groupName;
-    return this;
+    return MenuItemModel(
+      iNum: iNum ?? this.iNum,
+      itemName: itemName ?? this.itemName,
+      rate: rate ?? this.rate,
+      quantity: quantity ?? this.quantity,
+      groupName: groupName ?? this.groupName,
+    );
   }
 
   Map<String, dynamic> toJson() {

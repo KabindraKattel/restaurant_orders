@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
     return ModelPagedGridView<
         MapEntry<OpenOrderTableModel, List<OpenOrderModel>>>(
       items: model.entries.toList(),
+      noDataFoundMessage: MessageConstants.kNoOpenOrders,
       pageSize: 5,
       itemBuilder: (context, entry, index) {
         final key = entry.key;
@@ -67,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                       height: SpacingConstants.kS1,
                     ),
                     AutoSizeText(
-                      '${key.totalOrderItems! > 99 ? '99+' : key.totalOrderItems} ${StringConstants.kOrderItems}',
+                      '${key.totalOrderItems! > 1000 ? '999+' : key.totalOrderItems} ${StringConstants.kOrderItems}',
                       textAlign: TextAlign.center,
                       strutStyle: const StrutStyle(height: 1.5),
                       style: const TextStyle(

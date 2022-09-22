@@ -31,4 +31,27 @@ class OrderRepoImpl implements OrderRepo {
               .toList(growable: false));
     });
   }
+
+  @override
+  Future<Either<Failure, void>> saveOrders(
+    String tableNum,
+    String iNum,
+    double quantity,
+  ) async {
+    final Map<String, dynamic> json = {
+      'TableNum': tableNum,
+      'INum': iNum,
+      'PostingType': 'AD',
+      'Qty': quantity,
+    };
+    return (await _client.post(
+      ApiEndPoints.kSaveOrder,
+      queryParameters: json,
+      requiresToken: true,
+      requiresMobileNumber: true,
+    ))
+        .fold((failure) => Left(failure), (response) {
+      return const Right(null);
+    });
+  }
 }

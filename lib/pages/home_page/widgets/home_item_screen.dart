@@ -21,6 +21,7 @@ class HomeItemScreen extends StatelessWidget {
     return Center(
       child: ModelPagedListView<OpenOrderModel>(
         items: model,
+        noDataFoundMessage: MessageConstants.kNoOpenOrders,
         pageSize: 5,
         itemBuilder: (context, item, index) {
           return _buildDecoratedContentCard(
