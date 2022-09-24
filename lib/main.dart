@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
@@ -15,10 +16,11 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 late final PackageInfo packageInfo;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   Lottie.traceEnabled = true;
   packageInfo = await PackageInfo.fromPlatform();
   Hive.init(await FileUtils.getCacheDirPath());
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   Hive.registerAdapter(LocalTableModelAdapter());
   await Hive.openLazyBox<Map>(CacheManager.kAppCache);
   runApp(
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: StringConstants.kAppName,
       theme: ThemeData(
         primarySwatch: ColorConstants.kPrimaryColor.toMaterialColor(),

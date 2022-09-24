@@ -1,5 +1,5 @@
 class StringConstants {
-  static const String kAppName = 'Restaurant Orders';
+  static const String kAppName = 'Finman Restaurant\nKOT Order Taking System';
 
   ///Keys
   static const String kMobileNumberKey = "MobileNumber";

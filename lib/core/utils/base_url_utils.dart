@@ -61,7 +61,7 @@ class BaseUrlUtils {
                 isDanger: true,
                 title: StringConstants.kServerUrlSetup.toUpperCase(),
                 content: Text(
-                    'Do yo want to proceed with server url: ${formControl.value ?? ''}?'),
+                    'Do yo want to proceed with server url:\n ${formControl.value ?? ''}?'),
                 onContinue: () async {
                   if (formControl.valid) {
                     return true;

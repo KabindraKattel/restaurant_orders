@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,7 +11,6 @@ import 'package:restaurant_orders/core/resources/string_constants.dart';
 import 'package:restaurant_orders/core/resources/styles_constants.dart';
 import 'package:restaurant_orders/core/widgets/error_message_snack_bar.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
-import 'package:restaurant_orders/main.dart';
 import 'package:restaurant_orders/state_management/auth_guard/auth_providers.dart';
 import 'package:restaurant_orders/state_management/auth_guard/signin/signin_provider.dart';
 import 'package:restaurant_orders/state_management/auth_guard/signin/signin_state.dart';
@@ -84,13 +84,15 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: SpacingConstants.kS20,
+                      padding: const EdgeInsets.all(
+                        SpacingConstants.kS24,
                       ),
                       child: Center(
-                        child: Text(packageInfo.appName,
+                        child: AutoSizeText(StringConstants.kAppName,
+                            textAlign: TextAlign.center,
+                            strutStyle: const StrutStyle(height: 2),
                             style: TextStyle(
-                                fontWeight: StylesConstants.kHeadingWeight,
+                                fontWeight: StylesConstants.kCaptionWeight,
                                 fontSize: StylesConstants.kHeadingSize,
                                 color: Theme.of(context)
                                     .primaryColor
@@ -106,11 +108,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: SpacingConstants.kS10),
+                          const SizedBox(height: SpacingConstants.kS24),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: SpacingConstants.kS30,
-                                vertical: SpacingConstants.kS10),
+                                    horizontal: SpacingConstants.kS24,
+                                    vertical: SpacingConstants.kS16)
+                                .copyWith(top: 0),
                             child: ReactiveTextField(
                               formControlName: StringConstants.kMobileNumberKey,
                               keyboardType: TextInputType.number,
@@ -142,9 +145,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: SpacingConstants.kS30,
-                              vertical: SpacingConstants.kS10,
-                            ),
+                              horizontal: SpacingConstants.kS24,
+                              vertical: SpacingConstants.kS16,
+                            ).copyWith(top: 0),
                             child: ReactiveTextField(
                               formControlName: StringConstants.kFPinKey,
                               obscureText: hidePassword,
@@ -194,9 +197,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: SpacingConstants.kS30,
-                              vertical: SpacingConstants.kS5,
-                            ),
+                              horizontal: SpacingConstants.kS24,
+                              vertical: SpacingConstants.kS16,
+                            ).copyWith(top: 0),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 primary: Theme.of(context).primaryColor,
@@ -229,7 +232,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                                   orElse: () => Text(
                                     StringConstants.kLogin.toUpperCase(),
                                     style: TextStyle(
-                                      fontWeight: StylesConstants.kTitleWeight,
+                                      fontWeight:
+                                          StylesConstants.kCaptionWeight,
                                       color: Theme.of(context)
                                           .primaryColor
                                           .getForegroundColor(),
@@ -249,7 +253,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                             ),
                           ),
                           const SizedBox(
-                            height: SpacingConstants.kS40,
+                            height: SpacingConstants.kS24,
                           ),
                         ]),
                   )

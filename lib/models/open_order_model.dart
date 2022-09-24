@@ -30,8 +30,8 @@ class OpenOrderModel {
     account = json['Account'];
     customerName = json['CustomerName'];
     pTypeName = json['PTypeName'];
-    qty = json['Qty'];
-    totAmt = json['TotAmt'];
+    qty = (json['Qty'] as num?)?.toDouble();
+    totAmt = (json['TotAmt'] as num?)?.toDouble();
     orderDate = DateTime.tryParse(json['OrderDate'] ?? '');
     orderTimeGone = Time.tryParse(json['OrderTimeGone'] ?? '');
   }

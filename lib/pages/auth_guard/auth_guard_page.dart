@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_orders/core/pages/will_pop_page.dart';
 import 'package:restaurant_orders/core/resources/color_constants.dart';
@@ -17,6 +18,14 @@ class AuthGuardPage extends ConsumerStatefulWidget {
 }
 
 class _AuthGuardPageState extends ConsumerState<AuthGuardPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FlutterNativeSplash.remove();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopPage(

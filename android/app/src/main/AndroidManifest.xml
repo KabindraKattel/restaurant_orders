@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.restaurant_orders">
-   <application
-        android:label="Finman Hotel"
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:label="Finman KOT"
         android:name="${applicationName}"
         android:allowBackup="false"
         android:fullBackupContent="false"

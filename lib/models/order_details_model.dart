@@ -17,14 +17,14 @@ class OrderDetailModel {
     tableNum = json['TableNum'];
     iNum = json['INum'];
     itemName = json['ItemName'];
-    qty = json['Qty'];
-    rate = json['Rate'];
-    amt = json['Amt'];
-    nETTAmt = json['NETTAmt'];
+    qty = (json['Qty'] as num?)?.toDouble();
+    rate = (json['Rate'] as num?)?.toDouble();
+    amt = (json['Amt'] as num?)?.toDouble();
+    nETTAmt = (json['NETTAmt'] as num?)?.toDouble();
     kOTNum = json['KOTNum']?.toString();
-    prtYN = json['PrtYN'];
+    prtYN = (json['PrtYN'] as num?)?.toInt();
     printerName = json['PrinterName'];
-    tranID = json['TranID'];
+    tranID = (json['TranID'] as num?)?.toInt();
   }
 
   String? tableNum;

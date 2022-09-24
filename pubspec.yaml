@@ -61,6 +61,7 @@ dependencies:
   reactive_segmented_control: ^0.5.0
   reactive_dropdown_search: ^0.12.0
   badges: ^2.0.3
+  flutter_native_splash: ^2.2.9
 
 
 
@@ -77,7 +78,20 @@ dev_dependencies:
   hive_generator : ^1.1.2
   freezed : ^1.1.1
   build_runner: ^2.2.0
+  flutter_launcher_icons : ^0.10.0
 
+flutter_native_splash:
+  color: "#ffffff"
+  image: "assets/app_splash.png"
+  android: true
+  ios: true
+  android_12:
+  fullscreen: true
+
+flutter_icons:
+  image_path: "assets/app_logo.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
