@@ -27,7 +27,6 @@ class SaveCartOrderNotifier
             .fold((failure) {
           breakLoop = true;
         }, (_) {
-          print("SUCCESS ${element}");
           initItems.remove(element);
         });
         if (breakLoop) {
@@ -35,9 +34,8 @@ class SaveCartOrderNotifier
         }
       }
     }
-    print("REM ${initItems}");
     state = (model.cartItems?.isEmpty ?? true)
-        ? const SaveCartOrderState.success()
+        ? SaveCartOrderState.success(model.tableNumber)
         : SaveCartOrderError(const OtherFailure(),
             () => save(model.copyWith(cartItems: initItems)));
   }

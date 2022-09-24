@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/models/open_order_model.dart';
+import 'package:restaurant_orders/models/order_details_model.dart';
 import 'package:restaurant_orders/repos/order/order_repo.dart';
 
 import '../dio/i_dio_http.dart';
@@ -52,6 +53,27 @@ class OrderRepoImpl implements OrderRepo {
     ))
         .fold((failure) => Left(failure), (response) {
       return const Right(null);
+    });
+  }
+
+  @override
+  Future<Either<Failure, List<OrderDetailModel>>> getOrderDetails(
+      String tableNum) async {
+    return (await _client.post(
+      ApiEndPoints.kOrderDetails,
+      requiresMobileNumber: true,
+      requiresToken: true,
+      queryParameters: {'TableNum': tableNum},
+    ))
+        .fold((l) => Left(l), (response) {
+      final Map<String, dynamic> data = response.data;
+      return Right(data['result'] == null
+          ? []
+          : ((jsonDecode(data['result']) as List?)
+                      ?.cast<Map<String, dynamic>>() ??
+                  [])
+              .map((e) => OrderDetailModel.fromJson(e))
+              .toList(growable: false));
     });
   }
 }

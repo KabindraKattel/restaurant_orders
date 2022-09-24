@@ -25,7 +25,6 @@ class _MenuItemsCounterScreenState
         findCartItemNotifierProvider(widget.model),
       );
       final changedModel = state.cartItem.fold((l) => null, (r) => r);
-      print('CHANGED MODEL $changedModel');
       return _buildCounter(ref, changedModel ?? widget.model);
     });
   }

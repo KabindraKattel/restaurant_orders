@@ -5,8 +5,9 @@ import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/confirmation_alert_dialog.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
-import 'package:restaurant_orders/pages/create_order/create_order_page.dart';
 import 'package:restaurant_orders/pages/home_page/widgets/home_screen.dart';
+import 'package:restaurant_orders/pages/local_table_setup/local_table_setup_page.dart';
+import 'package:restaurant_orders/pages/order_details/order_details_page.dart';
 import 'package:restaurant_orders/state_management/auth_guard/auth_providers.dart';
 import 'package:restaurant_orders/state_management/open_orders/provider.dart';
 
@@ -23,6 +24,16 @@ class HomePage extends ConsumerWidget {
           ),
           actions: [
             IconButton(
+                icon: const FaIcon(FontAwesomeIcons.clockRotateLeft),
+                onPressed: () {
+                  _onOrderHistoryDetails(context);
+                }),
+            IconButton(
+                icon: const FaIcon(FontAwesomeIcons.couch),
+                onPressed: () {
+                  _onLocalTablesSetup(context);
+                }),
+            IconButton(
                 icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
                 onPressed: () {
                   _onLogout(context, ref);
@@ -31,40 +42,22 @@ class HomePage extends ConsumerWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(SpacingConstants.kS8),
-          child: Column(
-            children: [
-              Expanded(
-                child: Consumer(builder: (_, ref, __) {
-                  final state = ref.watch(openOrdersNotifierProvider);
-                  return state.when(
-                      loading: () => const Loading(),
-                      data: (data) => RefreshIndicator(
-                            onRefresh: () async =>
-                                ref.refresh(openOrdersNotifierProvider),
-                            child: HomeScreen(
-                              model: data,
-                            ),
-                          ),
-                      error: (failure, onRetry) => MyErrorWidget(
-                            failure: failure,
-                            onRetry: onRetry,
-                          ));
-                }),
-              ),
-              Container(
-                color: ColorConstants.kTransparent,
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const CreateOrderPage()));
-                  },
-                  label: const Text(StringConstants.kTakeOrder),
-                  icon: const FaIcon(FontAwesomeIcons.plus),
-                ),
-              )
-            ],
-          ),
+          child: Consumer(builder: (_, ref, __) {
+            final state = ref.watch(openOrdersNotifierProvider);
+            return state.when(
+                loading: () => const Loading(),
+                data: (data) => RefreshIndicator(
+                      onRefresh: () async =>
+                          ref.refresh(openOrdersNotifierProvider),
+                      child: HomeScreen(
+                        model: data,
+                      ),
+                    ),
+                error: (failure, onRetry) => MyErrorWidget(
+                      failure: failure,
+                      onRetry: onRetry,
+                    ));
+          }),
         ));
   }
 
@@ -86,5 +79,15 @@ class HomePage extends ConsumerWidget {
                 return true;
               });
         });
+  }
+
+  void _onLocalTablesSetup(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => const LocalTableSetupPage()));
+  }
+
+  void _onOrderHistoryDetails(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => OrderDetailsPage()));
   }
 }

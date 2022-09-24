@@ -26,8 +26,10 @@ class _$SaveCartOrderStateTearOff {
     return const SaveCartOrderLoading();
   }
 
-  SaveCartOrderSuccess success() {
-    return const SaveCartOrderSuccess();
+  SaveCartOrderSuccess success(String? tableNum) {
+    return SaveCartOrderSuccess(
+      tableNum,
+    );
   }
 
   SaveCartOrderError error(Failure failure, Future<void> Function()? onRetry) {
@@ -47,7 +49,7 @@ mixin _$SaveCartOrderState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(String? tableNum) success,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
         error,
   }) =>
@@ -56,7 +58,7 @@ mixin _$SaveCartOrderState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -64,7 +66,7 @@ mixin _$SaveCartOrderState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
     required TResult orElse(),
   }) =>
@@ -156,7 +158,7 @@ class _$SaveCartOrderInitial implements SaveCartOrderInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(String? tableNum) success,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
         error,
   }) {
@@ -168,7 +170,7 @@ class _$SaveCartOrderInitial implements SaveCartOrderInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
   }) {
     return initial?.call();
@@ -179,7 +181,7 @@ class _$SaveCartOrderInitial implements SaveCartOrderInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
     required TResult orElse(),
   }) {
@@ -274,7 +276,7 @@ class _$SaveCartOrderLoading implements SaveCartOrderLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(String? tableNum) success,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
         error,
   }) {
@@ -286,7 +288,7 @@ class _$SaveCartOrderLoading implements SaveCartOrderLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
   }) {
     return loading?.call();
@@ -297,7 +299,7 @@ class _$SaveCartOrderLoading implements SaveCartOrderLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
     required TResult orElse(),
   }) {
@@ -354,6 +356,7 @@ abstract class $SaveCartOrderSuccessCopyWith<$Res> {
   factory $SaveCartOrderSuccessCopyWith(SaveCartOrderSuccess value,
           $Res Function(SaveCartOrderSuccess) then) =
       _$SaveCartOrderSuccessCopyWithImpl<$Res>;
+  $Res call({String? tableNum});
 }
 
 /// @nodoc
@@ -366,37 +369,61 @@ class _$SaveCartOrderSuccessCopyWithImpl<$Res>
 
   @override
   SaveCartOrderSuccess get _value => super._value as SaveCartOrderSuccess;
+
+  @override
+  $Res call({
+    Object? tableNum = freezed,
+  }) {
+    return _then(SaveCartOrderSuccess(
+      tableNum == freezed
+          ? _value.tableNum
+          : tableNum // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$SaveCartOrderSuccess implements SaveCartOrderSuccess {
-  const _$SaveCartOrderSuccess();
+  const _$SaveCartOrderSuccess(this.tableNum);
+
+  @override
+  final String? tableNum;
 
   @override
   String toString() {
-    return 'SaveCartOrderState.success()';
+    return 'SaveCartOrderState.success(tableNum: $tableNum)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is SaveCartOrderSuccess);
+        (other.runtimeType == runtimeType &&
+            other is SaveCartOrderSuccess &&
+            const DeepCollectionEquality().equals(other.tableNum, tableNum));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(tableNum));
+
+  @JsonKey(ignore: true)
+  @override
+  $SaveCartOrderSuccessCopyWith<SaveCartOrderSuccess> get copyWith =>
+      _$SaveCartOrderSuccessCopyWithImpl<SaveCartOrderSuccess>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(String? tableNum) success,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
         error,
   }) {
-    return success();
+    return success(tableNum);
   }
 
   @override
@@ -404,10 +431,10 @@ class _$SaveCartOrderSuccess implements SaveCartOrderSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
   }) {
-    return success?.call();
+    return success?.call(tableNum);
   }
 
   @override
@@ -415,12 +442,12 @@ class _$SaveCartOrderSuccess implements SaveCartOrderSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success();
+      return success(tableNum);
     }
     return orElse();
   }
@@ -464,7 +491,12 @@ class _$SaveCartOrderSuccess implements SaveCartOrderSuccess {
 }
 
 abstract class SaveCartOrderSuccess implements SaveCartOrderState {
-  const factory SaveCartOrderSuccess() = _$SaveCartOrderSuccess;
+  const factory SaveCartOrderSuccess(String? tableNum) = _$SaveCartOrderSuccess;
+
+  String? get tableNum;
+  @JsonKey(ignore: true)
+  $SaveCartOrderSuccessCopyWith<SaveCartOrderSuccess> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -542,7 +574,7 @@ class _$SaveCartOrderError implements SaveCartOrderError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(String? tableNum) success,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
         error,
   }) {
@@ -554,7 +586,7 @@ class _$SaveCartOrderError implements SaveCartOrderError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
   }) {
     return error?.call(failure, onRetry);
@@ -565,7 +597,7 @@ class _$SaveCartOrderError implements SaveCartOrderError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String? tableNum)? success,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
     required TResult orElse(),
   }) {

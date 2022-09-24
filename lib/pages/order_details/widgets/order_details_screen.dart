@@ -1,27 +1,26 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
-import 'package:restaurant_orders/core/extensions/date_time_extension.dart';
 import 'package:restaurant_orders/core/extensions/num_extension.dart';
 import 'package:restaurant_orders/core/extensions/string_extensions.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/decorated_content_card.dart';
 import 'package:restaurant_orders/core/widgets/model_paged_list_view.dart';
 import 'package:restaurant_orders/core/widgets/table_from_map.dart';
-import 'package:restaurant_orders/models/open_order_model.dart';
+import 'package:restaurant_orders/models/order_details_model.dart';
 
-class HomeItemScreen extends StatelessWidget {
-  final List<OpenOrderModel> model;
-  const HomeItemScreen({Key? key, required this.model}) : super(key: key);
+class OrderDetailsScreen extends StatelessWidget {
+  final List<OrderDetailModel> model;
+  const OrderDetailsScreen({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const highlightColor = ColorConstants.kNewOrderColor;
     const contentHighlightColor = ColorConstants.kWhite;
     return Center(
-      child: ModelPagedListView<OpenOrderModel>(
+      child: ModelPagedListView<OrderDetailModel>(
         items: model,
-        noDataFoundMessage: MessageConstants.kNoOpenOrders,
+        noDataFoundMessage: MessageConstants.kNoOrderDetails,
         pageSize: 5,
         itemBuilder: (context, item, index) {
           return _buildDecoratedContentCard(
@@ -31,8 +30,8 @@ class HomeItemScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDecoratedContentCard(
-      OpenOrderModel item, Color highlightColor, Color contentHighlightColor) {
+  Widget _buildDecoratedContentCard(OrderDetailModel item, Color highlightColor,
+      Color contentHighlightColor) {
     return Padding(
       padding: const EdgeInsets.all(SpacingConstants.kS8),
       child: DecoratedContentCard(
@@ -49,22 +48,26 @@ class HomeItemScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(OpenOrderModel item, Color contentHighlightColor) {
+  Widget _buildContent(OrderDetailModel item, Color contentHighlightColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: SpacingConstants.kS8),
       child: TableFromMap(
         keyColumnWidth: const FixedColumnWidth(60),
         model: {
-          StringConstants.kAccount: item.account?.trim() ?? '',
-          StringConstants.kPaymentType: item.pTypeName?.trim() ?? '',
+          StringConstants.kOrderItem: item.itemName?.trim() ?? '',
           StringConstants.kQuantity: (item.qty?.neglectFractionZero()) ?? '',
-          StringConstants.kTotalKey: ((item.totAmt?.neglectFractionZero())
-                  ?.tryPrepend('${StringConstants.kRs} ')) ??
+          StringConstants.kRateKey: (item.rate?.neglectFractionZero())
+                  ?.tryPrepend(StringConstants.kRs) ??
               '',
-          StringConstants.kOrderDate:
-              item.orderDate?.format('EEE, dd MMM yyyy G, hh:mm:ss a') ?? '',
-          StringConstants.kOrderTimeGone:
-              item.orderTimeGone?.toFormattedString() ?? '',
+          StringConstants.kGrossAmount: ((item.amt?.neglectFractionZero())
+                  ?.tryPrepend(StringConstants.kRs)) ??
+              '',
+          StringConstants.kNetAmount: ((item.nETTAmt?.neglectFractionZero())
+                  ?.tryPrepend(StringConstants.kRs)) ??
+              '',
+          StringConstants.kKitchenOrderTicketNumber:
+              ((item.kOTNum)?.trim()) ?? '',
+          StringConstants.kPrinterName: item.printerName?.trim() ?? '',
         },
         keyBuilder: (key) {
           return AutoSizeText(
@@ -96,12 +99,10 @@ class HomeItemScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(OpenOrderModel item, Color highlightColor) {
+  Widget _buildTitle(OrderDetailModel item, Color highlightColor) {
     return ListTile(
       title: AutoSizeText(
-        (item.customerName?.isEmpty ?? true)
-            ? StringConstants.kAnonymousCustomer
-            : item.customerName!,
+        '${StringConstants.kTransactionId} : ${(item.tranID == null) ? StringConstants.kNotAvailable : item.tranID!.toString()}',
         strutStyle: const StrutStyle(height: 1.5),
         textAlign: TextAlign.center,
         style: TextStyle(

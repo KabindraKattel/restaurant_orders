@@ -6,6 +6,7 @@ import 'package:restaurant_orders/core/widgets/my_error.dart';
 import 'package:restaurant_orders/core/widgets/success_widget.dart';
 import 'package:restaurant_orders/pages/confirm_order/widgets/confirm_order_bottom_bar.dart';
 import 'package:restaurant_orders/pages/menu/widgets/menu_items_screen.dart';
+import 'package:restaurant_orders/pages/order_details/order_details_page.dart';
 import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
 import 'package:restaurant_orders/state_management/save_cart_order/provider.dart';
 
@@ -41,9 +42,15 @@ class _ConfirmOrderPageState extends ConsumerState<ConfirmOrderPage> {
           return state.when(
             initial: () => _buildBody(),
             loading: () => const Loading(),
-            success: () => SuccessWidget(
-              onContinue: () {
-                Navigator.maybePop(context);
+            success: (tableNum) => SuccessWidget(
+              onContinue: () async {
+                Navigator.maybePop(context).then((value) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => OrderDetailsPage(
+                            tableNum: tableNum,
+                            enableSearch: false,
+                          )));
+                });
               },
             ),
             error: (failure, onRetry) => MyErrorWidget(
@@ -58,7 +65,6 @@ class _ConfirmOrderPageState extends ConsumerState<ConfirmOrderPage> {
   Widget _buildBody() {
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(cartOrderNotifierProvider);
-      print("ITEMS ${state.cartOrder.cartItems ?? []}");
       return Column(
         children: [
           Expanded(

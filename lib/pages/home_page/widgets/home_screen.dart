@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_orders/core/extensions/string_extensions.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/model_paged_grid_view.dart';
 import 'package:restaurant_orders/models/open_order_model.dart';
+import 'package:restaurant_orders/pages/create_order/create_order_page.dart';
 import 'package:restaurant_orders/pages/home_page/home_item_page.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,6 +19,15 @@ class HomeScreen extends StatelessWidget {
       items: model.entries.toList(),
       noDataFoundMessage: MessageConstants.kNoOpenOrders,
       pageSize: 5,
+      padding: const EdgeInsets.symmetric(vertical: SpacingConstants.kS8),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const CreateOrderPage()));
+        },
+        label: const Text(StringConstants.kTakeOrder),
+        icon: const FaIcon(FontAwesomeIcons.plus),
+      ),
       itemBuilder: (context, entry, index) {
         final key = entry.key;
         final value = entry.value;

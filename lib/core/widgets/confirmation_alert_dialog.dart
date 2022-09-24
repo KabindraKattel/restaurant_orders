@@ -41,7 +41,10 @@ class ConfirmationAlertDialog extends StatelessWidget {
 
     // set up the AlertDialog
     return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+      filter: ImageFilter.blur(
+        sigmaX: 2,
+        sigmaY: 2,
+      ),
       child: AlertDialog(
         title: Text(
           title ?? "Confirmation Alert !".toUpperCase(),

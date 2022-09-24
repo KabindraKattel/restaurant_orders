@@ -189,7 +189,6 @@ class Counter extends HookConsumerWidget {
     if (oldValue != min) {
       var newValue = math.max(oldValue - 1, min);
       _control.value = includeFraction ? newValue.toDouble() : newValue.toInt();
-      print("DEC VAL ${_control.value}");
       onChanged?.call(_control.value);
     }
   }

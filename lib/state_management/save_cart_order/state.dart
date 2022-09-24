@@ -7,7 +7,8 @@ part 'state.freezed.dart';
 class SaveCartOrderState with _$SaveCartOrderState {
   const factory SaveCartOrderState.initial() = SaveCartOrderInitial;
   const factory SaveCartOrderState.loading() = SaveCartOrderLoading;
-  const factory SaveCartOrderState.success() = SaveCartOrderSuccess;
+  const factory SaveCartOrderState.success(String? tableNum) =
+      SaveCartOrderSuccess;
   const factory SaveCartOrderState.error(
       Failure failure, Future<void> Function()? onRetry) = SaveCartOrderError;
 }

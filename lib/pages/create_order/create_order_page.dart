@@ -19,6 +19,7 @@ class CreateOrderPage extends ConsumerWidget {
         await ref.read(cartNotifierProvider.notifier).clearCart();
         if (ref.read(saveCartOrderNotifierProvider) is SaveCartOrderSuccess) {
           ref.refresh(openOrdersNotifierProvider);
+          ref.refresh(saveCartOrderNotifierProvider);
         }
         return true;
       },

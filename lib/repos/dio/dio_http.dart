@@ -5,18 +5,14 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/core/widgets/confirmation_alert_dialog.dart';
+import 'package:restaurant_orders/core/utils/base_url_utils.dart';
 import 'package:restaurant_orders/core/widgets/custom_validators.dart';
-import 'package:restaurant_orders/core/widgets/error_message_snack_bar.dart';
 import 'package:restaurant_orders/repos/baseUrl/repos.dart';
-import 'package:restaurant_orders/state_management/auth_guard/auth_providers.dart';
 
-import '../../main.dart';
 import 'i_dio_http.dart';
 import 'interceptors/dio_app_interceptor.dart';
 import 'interceptors/dio_caching_interceptor.dart';
@@ -61,45 +57,12 @@ class HttpClient implements IHttpClient {
     }
     final formControl = FormControl<String>(
         validators: [Validators.required, CustomValidators.url]);
-    final bool? success = await showDialog<bool>(
-        context: navigatorKey.currentContext!,
-        builder: (context) {
-          return Center(
-            child: SingleChildScrollView(
-              child: ConfirmationAlertDialog(
-                isDanger: false,
-                title: StringConstants.kServerUrlSetup.toUpperCase(),
-                content: ReactiveTextField<String>(
-                  toolbarOptions: const ToolbarOptions(
-                    copy: true,
-                    paste: true,
-                    cut: true,
-                    selectAll: true,
-                  ),
-                  decoration: const InputDecoration(
-                      isDense: true,
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.all(SpacingConstants.kS16),
-                      errorStyle: TextStyle(
-                        color: ColorConstants.kErrorRed,
-                      )),
-                  formControl: formControl,
-                  keyboardType: TextInputType.url,
-                ),
-                onContinue: () async {
-                  if (formControl.valid) {
-                    return true;
-                  } else {
-                    formControl.markAsTouched();
-                    return false;
-                  }
-                },
-              ),
-            ),
-          );
-        });
-
-    return success == true
+    final bool? inputSuccess = await BaseUrlUtils.showInputDialog(
+        formControl: formControl, repo: baseUrlRepo);
+    final bool? confirmSuccess = inputSuccess == true
+        ? await BaseUrlUtils.showConfirmBaseUrlDialog(formControl: formControl)
+        : false;
+    return confirmSuccess == true
         ? (await baseUrlRepo.setBaseUrl(baseUrl: formControl.value!) ??
             await _getBaseUrl())
         : await _getBaseUrl();
@@ -200,15 +163,6 @@ class HttpClient implements IHttpClient {
         ),
       );
     } on DioError catch (e) {
-      if (e.error is UnAuthorizedException) {
-        await _storage.deleteAll();
-        ProviderScope.containerOf(navigatorKey.currentContext!, listen: false)
-            .read(authNotifierProvider.notifier)
-            .isUserLoggedIn();
-        Navigator.of(navigatorKey.currentContext!)
-            .popUntil(ModalRoute.withName('/'));
-        ErrorMsgSnackBar.build(message: e.error.message);
-      }
       return Left(HttpFailure(message: e.error.message));
     }
   }

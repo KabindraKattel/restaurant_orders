@@ -18,6 +18,13 @@ class DioAppInterceptor extends InterceptorsWrapper {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
+    try {
+      if (!options.uri.hasScheme) {
+        options.baseUrl = 'http://${options.baseUrl}';
+      }
+    } on FormatException {
+      options.baseUrl = 'http://${options.baseUrl}';
+    }
     if (options.headers.containsKey(
       DioCustomHeader.REQUIRES_TOKEN,
     )) {

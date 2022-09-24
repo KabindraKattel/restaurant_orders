@@ -4,7 +4,8 @@ import '../resources/resources.dart';
 
 class NoDataFound extends StatelessWidget {
   final String? message;
-  const NoDataFound({Key? key, this.message}) : super(key: key);
+  final Widget? child;
+  const NoDataFound({Key? key, this.message, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class NoDataFound extends StatelessWidget {
                   fontWeight: StylesConstants.kTitleWeight,
                   color: ColorConstants.kErrorRed),
             ),
+            if (child != null) child!,
             const Spacer(),
           ],
         ),
