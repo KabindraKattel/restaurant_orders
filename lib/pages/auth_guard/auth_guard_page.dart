@@ -19,14 +19,6 @@ class AuthGuardPage extends ConsumerStatefulWidget {
 
 class _AuthGuardPageState extends ConsumerState<AuthGuardPage> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FlutterNativeSplash.remove();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return WillPopPage(
       child: Consumer(builder: (context, ref, child) {
@@ -36,12 +28,15 @@ class _AuthGuardPageState extends ConsumerState<AuthGuardPage> {
           body: authState.when(
             loading: () => const Loading(),
             authenticated: () {
+              FlutterNativeSplash.remove();
               return const LandingScreen();
             },
             unAuthenticated: () {
+              FlutterNativeSplash.remove();
               return const LoginScreen();
             },
             error: (failure, onRetry) {
+              FlutterNativeSplash.remove();
               return MyErrorWidget(
                 failure: failure,
                 onRetry: onRetry,

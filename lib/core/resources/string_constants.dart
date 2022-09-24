@@ -25,8 +25,8 @@ class StringConstants {
   static const String kTableIdKey = 'Table: ';
   static const String kItemKey = 'Item';
   static const String kTotalKey = 'Total';
-  static const String kGrossAmount = 'Gross Amount';
-  static const String kNetAmount = 'Net Amount';
+  static const String kGrossAmount = 'Gross';
+  static const String kNetAmount = 'Net';
   static const String kRateKey = 'Rate';
   static const String kViewOrder = 'View Order';
   static const String kEnterTable = 'Enter Table';
