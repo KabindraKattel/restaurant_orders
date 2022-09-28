@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/models/local_table_model.dart';
 import 'package:restaurant_orders/pages/auth_guard/auth_guard_page.dart';
 
 import 'core/utils/file_utils.dart';
@@ -21,7 +22,6 @@ Future<void> main() async {
   packageInfo = await PackageInfo.fromPlatform();
   Hive.init(await FileUtils.getCacheDirPath());
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  Hive.registerAdapter(LocalTableModelAdapter());
   await Hive.openLazyBox<Map>(CacheManager.kAppCache);
   runApp(
     const ProviderScope(
@@ -43,6 +43,15 @@ class MyApp extends StatelessWidget {
       title: StringConstants.kAppName,
       theme: ThemeData(
         primarySwatch: ColorConstants.kPrimaryColor.toMaterialColor(),
+      ),
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        ClampingScrollWrapper.builder(context, widget!),
+        breakpoints: const [
+          ResponsiveBreakpoint.resize(350, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(600, name: TABLET),
+          ResponsiveBreakpoint.autoScale(800, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
+        ],
       ),
       home: const AuthGuardPage(),
       // const MyHomePage(title: 'Order List'),

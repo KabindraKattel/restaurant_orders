@@ -6,7 +6,7 @@ import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
 import 'package:restaurant_orders/core/widgets/no_data_found.dart';
-import 'package:restaurant_orders/pages/local_table_setup/widgets/local_table_dropdown_search_screen.dart';
+import 'package:restaurant_orders/pages/local_table_setup/widgets/local_table_input_screen.dart';
 import 'package:restaurant_orders/pages/order_details/widgets/order_details_screen.dart';
 import 'package:restaurant_orders/state_management/order_details/provider.dart';
 
@@ -24,6 +24,12 @@ class OrderDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
+  final TextStyle _style = const TextStyle(
+    color: ColorConstants.kBlack,
+    fontSize: StylesConstants.kCaptionSize,
+    fontWeight: StylesConstants.kHeadingWeight,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -63,13 +69,11 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                             final state =
                                 ref.watch(orderDetailsNotifierProvider);
                             return state.when(
-                                loading: () =>
-                                    widget._tableControl.value == null
-                                        ? const NoDataFound(
-                                            message: MessageConstants
-                                                .kNoSearchTermEntered,
-                                          )
-                                        : const Loading(),
+                                initial: () => const NoDataFound(
+                                      message:
+                                          MessageConstants.kNoSearchTermEntered,
+                                    ),
+                                loading: () => const Loading(),
                                 data: (data) => RefreshIndicator(
                                       onRefresh: () async => ref.read(
                                               orderDetailsNotifierProvider
@@ -92,33 +96,47 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
 
   InputDecorator _buildTableInfo() {
     return InputDecorator(
-        decoration: InputDecoration(
-            isDense: true,
-            suffixIcon: widget._tableControl.value != null
-                ? null
-                : const Icon(Icons.error),
-            border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.all(SpacingConstants.kS8)),
-        child: Text(
-          '${StringConstants.kTableNumber.toUpperCase()}: ${widget.tableNum!}',
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: StylesConstants.kSubTitleSize,
-            fontWeight: StylesConstants.kSubTitleWeight,
+      decoration: InputDecoration(
+          isDense: true,
+          suffixIcon:
+              widget._tableControl.valid ? null : const Icon(Icons.error),
+          border: const OutlineInputBorder(
+            gapPadding: SpacingConstants.kS0,
+            borderRadius: BorderRadius.all(RadiusConstants.kR8),
           ),
-          maxLines: null,
-        ));
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: SpacingConstants.kS8,
+              vertical: SpacingConstants.kS4)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            StringConstants.kTableNumber,
+            textAlign: TextAlign.center,
+            style: _style,
+          ),
+          Text(
+            widget.tableNum!,
+            textAlign: TextAlign.start,
+            strutStyle: const StrutStyle(height: 1.5),
+            style: _style.copyWith(
+                fontWeight: StylesConstants.kSubTitleWeight,
+                fontSize: StylesConstants.kSubTitleSize),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSearchBar(WidgetRef ref) {
     return Row(
       children: [
         Expanded(
-            child: LocalTableDropdownSearchScreen(
-                formControl: widget._tableControl)),
+            child: LocalTableInputScreen(formControl: widget._tableControl)),
         IconButton(
             onPressed: () {
               if (widget._tableControl.valid) {
+                widget._tableControl.unfocus();
                 ref.read(orderDetailsNotifierProvider.notifier)(
                     widget._tableControl.value!);
               } else {

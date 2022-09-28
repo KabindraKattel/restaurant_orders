@@ -1,4 +1,3 @@
-export 'local_table_model.dart';
 export 'menu_group_model.dart';
 export 'menu_item_model.dart';
 export 'open_order_model.dart';

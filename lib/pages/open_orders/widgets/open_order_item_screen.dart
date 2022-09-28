@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
 import 'package:restaurant_orders/core/extensions/date_time_extension.dart';
 import 'package:restaurant_orders/core/extensions/num_extension.dart';
@@ -9,42 +11,67 @@ import 'package:restaurant_orders/core/widgets/decorated_content_card.dart';
 import 'package:restaurant_orders/core/widgets/model_paged_list_view.dart';
 import 'package:restaurant_orders/core/widgets/table_from_map.dart';
 import 'package:restaurant_orders/models/open_order_model.dart';
+import 'package:restaurant_orders/pages/create_order/create_order_page.dart';
+import 'package:restaurant_orders/pages/order_details/order_details_page.dart';
+import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
 
-class HomeItemScreen extends StatelessWidget {
+class OpenOrderItemScreen extends ConsumerWidget {
+  final String? tableNum;
   final List<OpenOrderModel> model;
-  const HomeItemScreen({Key? key, required this.model}) : super(key: key);
+  const OpenOrderItemScreen({Key? key, this.tableNum, required this.model})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const highlightColor = ColorConstants.kNewOrderColor;
     const contentHighlightColor = ColorConstants.kWhite;
-    return Center(
-      child: ModelPagedListView<OpenOrderModel>(
-        items: model,
-        noDataFoundMessage: MessageConstants.kNoOpenOrders,
-        pageSize: 5,
-        itemBuilder: (context, item, index) {
-          return _buildDecoratedContentCard(
-              item, highlightColor, contentHighlightColor);
-        },
+    return ModelPagedListView<OpenOrderModel>(
+      items: model,
+      padding: const EdgeInsets.all(SpacingConstants.kS8),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(SpacingConstants.kS8).copyWith(top: 0),
+        child: FloatingActionButton.extended(
+          heroTag: OpenOrderItemScreen,
+          onPressed: () async {
+            ref
+                .read(cartOrderNotifierProvider.notifier)
+                .getOrder(tableNum: tableNum)
+                .then((value) async {
+              Navigator.of(context).push<bool>(
+                  MaterialPageRoute(builder: (_) => const CreateOrderPage()));
+            });
+          },
+          label: const Text(StringConstants.kTakeOrder),
+          icon: const FaIcon(FontAwesomeIcons.plus),
+        ),
       ),
+      noDataFoundMessage: MessageConstants.kNoOpenOrders,
+      pageSize: 5,
+      itemBuilder: (context, item, index) {
+        return _buildDecoratedContentCard(
+            context, item, highlightColor, contentHighlightColor);
+      },
     );
   }
 
-  Widget _buildDecoratedContentCard(
-      OpenOrderModel item, Color highlightColor, Color contentHighlightColor) {
+  Widget _buildDecoratedContentCard(BuildContext context, OpenOrderModel item,
+      Color highlightColor, Color contentHighlightColor) {
     return Padding(
       padding: const EdgeInsets.all(SpacingConstants.kS8),
-      child: DecoratedContentCard(
-        elevation: SpacingConstants.kS8,
-        titlePadding:
-            const EdgeInsets.symmetric(horizontal: SpacingConstants.kS16),
-        contentPadding: const EdgeInsets.symmetric(
-            horizontal: SpacingConstants.kS8, vertical: SpacingConstants.kS16),
-        title: _buildTitle(item, highlightColor),
-        content: _buildContent(item, contentHighlightColor),
-        titleBgColor: highlightColor,
-        contentBgColor: contentHighlightColor,
+      child: GestureDetector(
+        onTap: () => _onView(context),
+        child: DecoratedContentCard(
+          elevation: SpacingConstants.kS8,
+          titlePadding:
+              const EdgeInsets.symmetric(horizontal: SpacingConstants.kS16),
+          contentPadding: const EdgeInsets.symmetric(
+              horizontal: SpacingConstants.kS8,
+              vertical: SpacingConstants.kS16),
+          title: _buildTitle(context, item, highlightColor),
+          content: _buildContent(item, contentHighlightColor),
+          titleBgColor: highlightColor,
+          contentBgColor: contentHighlightColor,
+        ),
       ),
     );
   }
@@ -96,8 +123,12 @@ class HomeItemScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(OpenOrderModel item, Color highlightColor) {
+  Widget _buildTitle(
+      BuildContext context, OpenOrderModel item, Color highlightColor) {
     return ListTile(
+      onTap: () {
+        _onView(context);
+      },
       title: AutoSizeText(
         (item.customerName?.isEmpty ?? true)
             ? StringConstants.kAnonymousCustomer
@@ -110,6 +141,20 @@ class HomeItemScreen extends StatelessWidget {
           color: highlightColor.getForegroundColor(),
         ),
       ),
+      trailing: IconButton(
+        padding: const EdgeInsets.all(SpacingConstants.kS0),
+        color: highlightColor.getForegroundColor(),
+        icon: const FaIcon(FontAwesomeIcons.eye),
+        onPressed: () => _onView(context),
+      ),
     );
+  }
+
+  void _onView(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => OrderDetailsPage(
+              tableNum: tableNum,
+              enableSearch: false,
+            )));
   }
 }

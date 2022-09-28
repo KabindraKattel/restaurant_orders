@@ -17,16 +17,14 @@ class OrderDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const highlightColor = ColorConstants.kNewOrderColor;
     const contentHighlightColor = ColorConstants.kWhite;
-    return Center(
-      child: ModelPagedListView<OrderDetailModel>(
-        items: model,
-        noDataFoundMessage: MessageConstants.kNoOrderDetails,
-        pageSize: 5,
-        itemBuilder: (context, item, index) {
-          return _buildDecoratedContentCard(
-              item, highlightColor, contentHighlightColor);
-        },
-      ),
+    return ModelPagedListView<OrderDetailModel>(
+      items: model,
+      noDataFoundMessage: MessageConstants.kNoOrderDetails,
+      pageSize: 5,
+      itemBuilder: (context, item, index) {
+        return _buildDecoratedContentCard(
+            item, highlightColor, contentHighlightColor);
+      },
     );
   }
 

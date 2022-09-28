@@ -67,6 +67,7 @@ class DecoratedContentCard extends StatelessWidget {
       ],
     );
     return Card(
+      clipBehavior: Clip.antiAlias,
       elevation: elevation,
       shape: StylesConstants.kCardShape,
       color: contentBgColor,

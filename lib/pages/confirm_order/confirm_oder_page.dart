@@ -44,7 +44,7 @@ class _ConfirmOrderPageState extends ConsumerState<ConfirmOrderPage> {
             loading: () => const Loading(),
             success: (tableNum) => SuccessWidget(
               onContinue: () async {
-                Navigator.maybePop(context).then((value) {
+                Navigator.maybePop(context, true).then((value) {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (_) => OrderDetailsPage(
                             tableNum: tableNum,

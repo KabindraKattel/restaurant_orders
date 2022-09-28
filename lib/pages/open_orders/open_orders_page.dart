@@ -5,14 +5,13 @@ import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/confirmation_alert_dialog.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
-import 'package:restaurant_orders/pages/home_page/widgets/home_screen.dart';
-import 'package:restaurant_orders/pages/local_table_setup/local_table_setup_page.dart';
+import 'package:restaurant_orders/pages/open_orders/widgets/open_orders_screen.dart';
 import 'package:restaurant_orders/pages/order_details/order_details_page.dart';
 import 'package:restaurant_orders/state_management/auth_guard/auth_providers.dart';
 import 'package:restaurant_orders/state_management/open_orders/provider.dart';
 
-class HomePage extends ConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+class OpenOrdersPage extends ConsumerWidget {
+  const OpenOrdersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,36 +28,28 @@ class HomePage extends ConsumerWidget {
                   _onOrderHistoryDetails(context);
                 }),
             IconButton(
-                icon: const FaIcon(FontAwesomeIcons.couch),
-                onPressed: () {
-                  _onLocalTablesSetup(context);
-                }),
-            IconButton(
                 icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
                 onPressed: () {
                   _onLogout(context, ref);
                 }),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(SpacingConstants.kS8),
-          child: Consumer(builder: (_, ref, __) {
-            final state = ref.watch(openOrdersNotifierProvider);
-            return state.when(
-                loading: () => const Loading(),
-                data: (data) => RefreshIndicator(
-                      onRefresh: () async =>
-                          ref.refresh(openOrdersNotifierProvider),
-                      child: HomeScreen(
-                        model: data,
-                      ),
+        body: Consumer(builder: (_, ref, __) {
+          final state = ref.watch(openOrdersNotifierProvider);
+          return state.when(
+              loading: () => const Loading(),
+              data: (data) => RefreshIndicator(
+                    onRefresh: () async =>
+                        ref.refresh(openOrdersNotifierProvider),
+                    child: OpenOrdersScreen(
+                      model: data,
                     ),
-                error: (failure, onRetry) => MyErrorWidget(
-                      failure: failure,
-                      onRetry: onRetry,
-                    ));
-          }),
-        ));
+                  ),
+              error: (failure, onRetry) => MyErrorWidget(
+                    failure: failure,
+                    onRetry: onRetry,
+                  ));
+        }));
   }
 
   void _onLogout(BuildContext context, WidgetRef ref) {
@@ -79,11 +70,6 @@ class HomePage extends ConsumerWidget {
                 return true;
               });
         });
-  }
-
-  void _onLocalTablesSetup(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const LocalTableSetupPage()));
   }
 
   void _onOrderHistoryDetails(BuildContext context) {

@@ -6,6 +6,7 @@ part 'state.freezed.dart';
 
 @freezed
 class OrderDetailsState with _$OrderDetailsState {
+  const factory OrderDetailsState.initial() = OrderDetailsInitial;
   const factory OrderDetailsState.loading() = OrderDetailsLoading;
   const factory OrderDetailsState.data({required List<OrderDetailModel> data}) =
       OrderDetailsData;

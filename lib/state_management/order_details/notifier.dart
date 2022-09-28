@@ -10,7 +10,7 @@ class OrderDetailsNotifier
     extends CancelableStateNotifier<OrderDetailsState, List<OrderDetailModel>> {
   final OrderRepo _repo;
 
-  OrderDetailsNotifier(this._repo) : super(const OrderDetailsState.loading());
+  OrderDetailsNotifier(this._repo) : super(const OrderDetailsState.initial());
 
   Future<void> call(String tableNum) async {
     state = const OrderDetailsState.loading();

@@ -1,5 +1,6 @@
 class SpacingConstants {
   static const double kS0 = 0.0;
+  static const double kSHalf = 0.5;
   static const double kS1 = 1.0;
   static const double kS1Half = 1.5;
   static const double kS2 = 2.0;

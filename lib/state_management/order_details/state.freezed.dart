@@ -18,6 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$OrderDetailsStateTearOff {
   const _$OrderDetailsStateTearOff();
 
+  OrderDetailsInitial initial() {
+    return const OrderDetailsInitial();
+  }
+
   OrderDetailsLoading loading() {
     return const OrderDetailsLoading();
   }
@@ -43,6 +47,7 @@ const $OrderDetailsState = _$OrderDetailsStateTearOff();
 mixin _$OrderDetailsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<OrderDetailModel> data) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -51,6 +56,7 @@ mixin _$OrderDetailsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -58,6 +64,7 @@ mixin _$OrderDetailsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -66,6 +73,7 @@ mixin _$OrderDetailsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(OrderDetailsInitial value) initial,
     required TResult Function(OrderDetailsLoading value) loading,
     required TResult Function(OrderDetailsData value) data,
     required TResult Function(OrderDetailsError value) error,
@@ -73,6 +81,7 @@ mixin _$OrderDetailsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -80,6 +89,7 @@ mixin _$OrderDetailsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -103,6 +113,124 @@ class _$OrderDetailsStateCopyWithImpl<$Res>
   final OrderDetailsState _value;
   // ignore: unused_field
   final $Res Function(OrderDetailsState) _then;
+}
+
+/// @nodoc
+abstract class $OrderDetailsInitialCopyWith<$Res> {
+  factory $OrderDetailsInitialCopyWith(
+          OrderDetailsInitial value, $Res Function(OrderDetailsInitial) then) =
+      _$OrderDetailsInitialCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$OrderDetailsInitialCopyWithImpl<$Res>
+    extends _$OrderDetailsStateCopyWithImpl<$Res>
+    implements $OrderDetailsInitialCopyWith<$Res> {
+  _$OrderDetailsInitialCopyWithImpl(
+      OrderDetailsInitial _value, $Res Function(OrderDetailsInitial) _then)
+      : super(_value, (v) => _then(v as OrderDetailsInitial));
+
+  @override
+  OrderDetailsInitial get _value => super._value as OrderDetailsInitial;
+}
+
+/// @nodoc
+
+class _$OrderDetailsInitial implements OrderDetailsInitial {
+  const _$OrderDetailsInitial();
+
+  @override
+  String toString() {
+    return 'OrderDetailsState.initial()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is OrderDetailsInitial);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<OrderDetailModel> data) data,
+    required TResult Function(Failure failure, Future<void> Function()? onRetry)
+        error,
+  }) {
+    return initial();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<OrderDetailModel> data)? data,
+    TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<OrderDetailModel> data)? data,
+    TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(OrderDetailsInitial value) initial,
+    required TResult Function(OrderDetailsLoading value) loading,
+    required TResult Function(OrderDetailsData value) data,
+    required TResult Function(OrderDetailsError value) error,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
+    TResult Function(OrderDetailsLoading value)? loading,
+    TResult Function(OrderDetailsData value)? data,
+    TResult Function(OrderDetailsError value)? error,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
+    TResult Function(OrderDetailsLoading value)? loading,
+    TResult Function(OrderDetailsData value)? data,
+    TResult Function(OrderDetailsError value)? error,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class OrderDetailsInitial implements OrderDetailsState {
+  const factory OrderDetailsInitial() = _$OrderDetailsInitial;
 }
 
 /// @nodoc
@@ -146,6 +274,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<OrderDetailModel> data) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -157,6 +286,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -167,6 +297,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -181,6 +312,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(OrderDetailsInitial value) initial,
     required TResult Function(OrderDetailsLoading value) loading,
     required TResult Function(OrderDetailsData value) data,
     required TResult Function(OrderDetailsError value) error,
@@ -191,6 +323,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -201,6 +334,7 @@ class _$OrderDetailsLoading implements OrderDetailsLoading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -282,6 +416,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<OrderDetailModel> data) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -293,6 +428,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -303,6 +439,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -317,6 +454,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(OrderDetailsInitial value) initial,
     required TResult Function(OrderDetailsLoading value) loading,
     required TResult Function(OrderDetailsData value) data,
     required TResult Function(OrderDetailsError value) error,
@@ -327,6 +465,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -337,6 +476,7 @@ class _$OrderDetailsData implements OrderDetailsData {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -432,6 +572,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<OrderDetailModel> data) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -443,6 +584,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -453,6 +595,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<OrderDetailModel> data)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -467,6 +610,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(OrderDetailsInitial value) initial,
     required TResult Function(OrderDetailsLoading value) loading,
     required TResult Function(OrderDetailsData value) data,
     required TResult Function(OrderDetailsError value) error,
@@ -477,6 +621,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
@@ -487,6 +632,7 @@ class _$OrderDetailsError implements OrderDetailsError {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(OrderDetailsInitial value)? initial,
     TResult Function(OrderDetailsLoading value)? loading,
     TResult Function(OrderDetailsData value)? data,
     TResult Function(OrderDetailsError value)? error,
