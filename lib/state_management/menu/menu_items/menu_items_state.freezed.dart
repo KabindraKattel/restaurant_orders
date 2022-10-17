@@ -18,6 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$MenuItemsStateTearOff {
   const _$MenuItemsStateTearOff();
 
+  MenuItemsInitial initial() {
+    return const MenuItemsInitial();
+  }
+
   MenuItemsLoading loading() {
     return const MenuItemsLoading();
   }
@@ -43,6 +47,7 @@ const $MenuItemsState = _$MenuItemsStateTearOff();
 mixin _$MenuItemsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<MenuItemModel> menuItems) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -51,6 +56,7 @@ mixin _$MenuItemsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -58,6 +64,7 @@ mixin _$MenuItemsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -66,6 +73,7 @@ mixin _$MenuItemsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(MenuItemsInitial value) initial,
     required TResult Function(MenuItemsLoading value) loading,
     required TResult Function(MenuItemsData value) data,
     required TResult Function(MenuItemsError value) error,
@@ -73,6 +81,7 @@ mixin _$MenuItemsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -80,6 +89,7 @@ mixin _$MenuItemsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -103,6 +113,124 @@ class _$MenuItemsStateCopyWithImpl<$Res>
   final MenuItemsState _value;
   // ignore: unused_field
   final $Res Function(MenuItemsState) _then;
+}
+
+/// @nodoc
+abstract class $MenuItemsInitialCopyWith<$Res> {
+  factory $MenuItemsInitialCopyWith(
+          MenuItemsInitial value, $Res Function(MenuItemsInitial) then) =
+      _$MenuItemsInitialCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$MenuItemsInitialCopyWithImpl<$Res>
+    extends _$MenuItemsStateCopyWithImpl<$Res>
+    implements $MenuItemsInitialCopyWith<$Res> {
+  _$MenuItemsInitialCopyWithImpl(
+      MenuItemsInitial _value, $Res Function(MenuItemsInitial) _then)
+      : super(_value, (v) => _then(v as MenuItemsInitial));
+
+  @override
+  MenuItemsInitial get _value => super._value as MenuItemsInitial;
+}
+
+/// @nodoc
+
+class _$MenuItemsInitial implements MenuItemsInitial {
+  const _$MenuItemsInitial();
+
+  @override
+  String toString() {
+    return 'MenuItemsState.initial()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is MenuItemsInitial);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<MenuItemModel> menuItems) data,
+    required TResult Function(Failure failure, Future<void> Function()? onRetry)
+        error,
+  }) {
+    return initial();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<MenuItemModel> menuItems)? data,
+    TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
+  }) {
+    return initial?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<MenuItemModel> menuItems)? data,
+    TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(MenuItemsInitial value) initial,
+    required TResult Function(MenuItemsLoading value) loading,
+    required TResult Function(MenuItemsData value) data,
+    required TResult Function(MenuItemsError value) error,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
+    TResult Function(MenuItemsLoading value)? loading,
+    TResult Function(MenuItemsData value)? data,
+    TResult Function(MenuItemsError value)? error,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
+    TResult Function(MenuItemsLoading value)? loading,
+    TResult Function(MenuItemsData value)? data,
+    TResult Function(MenuItemsError value)? error,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class MenuItemsInitial implements MenuItemsState {
+  const factory MenuItemsInitial() = _$MenuItemsInitial;
 }
 
 /// @nodoc
@@ -146,6 +274,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<MenuItemModel> menuItems) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -157,6 +286,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -167,6 +297,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -181,6 +312,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(MenuItemsInitial value) initial,
     required TResult Function(MenuItemsLoading value) loading,
     required TResult Function(MenuItemsData value) data,
     required TResult Function(MenuItemsError value) error,
@@ -191,6 +323,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -201,6 +334,7 @@ class _$MenuItemsLoading implements MenuItemsLoading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -282,6 +416,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<MenuItemModel> menuItems) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -293,6 +428,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -303,6 +439,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -317,6 +454,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(MenuItemsInitial value) initial,
     required TResult Function(MenuItemsLoading value) loading,
     required TResult Function(MenuItemsData value) data,
     required TResult Function(MenuItemsError value) error,
@@ -327,6 +465,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -337,6 +476,7 @@ class _$MenuItemsData implements MenuItemsData {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -432,6 +572,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<MenuItemModel> menuItems) data,
     required TResult Function(Failure failure, Future<void> Function()? onRetry)
@@ -443,6 +584,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -453,6 +595,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<MenuItemModel> menuItems)? data,
     TResult Function(Failure failure, Future<void> Function()? onRetry)? error,
@@ -467,6 +610,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(MenuItemsInitial value) initial,
     required TResult Function(MenuItemsLoading value) loading,
     required TResult Function(MenuItemsData value) data,
     required TResult Function(MenuItemsError value) error,
@@ -477,6 +621,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,
@@ -487,6 +632,7 @@ class _$MenuItemsError implements MenuItemsError {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(MenuItemsInitial value)? initial,
     TResult Function(MenuItemsLoading value)? loading,
     TResult Function(MenuItemsData value)? data,
     TResult Function(MenuItemsError value)? error,

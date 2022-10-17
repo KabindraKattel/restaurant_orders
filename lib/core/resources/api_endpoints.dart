@@ -6,4 +6,6 @@ class ApiEndPoints {
   static const String kOpenOrders = '/ListOpenOrders';
   static const String kOrderDetails = '/ListOrderDetails';
   static const String kSaveOrder = '/SaveOrder';
+  static const String kItemNumberDetails = '/ItemNumDetails';
+  static const String kGetCompanyInformation = '/GetCoInf';
 }

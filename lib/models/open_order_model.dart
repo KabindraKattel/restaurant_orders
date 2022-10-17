@@ -1,4 +1,3 @@
-import 'package:restaurant_orders/core/extensions/map_extension.dart';
 import 'package:restaurant_orders/core/model/time.dart';
 
 class OpenOrderTableModel {
@@ -6,11 +5,6 @@ class OpenOrderTableModel {
   double? totalOrderItems;
 
   OpenOrderTableModel(this.tableNum, this.totalOrderItems);
-
-  @override
-  String toString() {
-    return '$tableNum: -- $totalOrderItems';
-  }
 }
 
 class OpenOrderModel {
@@ -56,10 +50,5 @@ class OpenOrderModel {
     map['OrderDate'] = orderDate?.toIso8601String();
     map['OrderTimeGone'] = orderTimeGone?.toFormattedString(hr_12: false);
     return map;
-  }
-
-  @override
-  String toString() {
-    return toJson().prettify();
   }
 }

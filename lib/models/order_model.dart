@@ -31,12 +31,4 @@ class OrderModel {
         cartItems?.map((e) => e.toJson()).toList(growable: false);
     return json;
   }
-
-  @override
-  String toString() {
-    return '''
-    $id,
-    $tableNumber,
-    $cartItems,''';
-  }
 }

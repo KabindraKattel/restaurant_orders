@@ -23,8 +23,8 @@ typedef ModelPagedGridViewSlidableItemBuilder<Model> = Slidable? Function(
 class ModelPagedGridView<Model> extends StatefulWidget {
   final List<Model> items;
   final int pageSize;
-  final int crossAxisCountPortrait;
-  final int crossAxisCountLandscape;
+  final int Function(BoxConstraints constraints)? crossAxisCountBuilder;
+  final int? crossAxisCount;
   final Widget? floatingActionButton;
   final double? childAspectRatio;
   final String? noDataFoundMessage;
@@ -53,10 +53,12 @@ class ModelPagedGridView<Model> extends StatefulWidget {
     this.padding,
     this.childAspectRatio,
     this.noItemsFoundIndicatorBuilder,
-    required this.crossAxisCountPortrait,
-    required this.crossAxisCountLandscape,
+    this.crossAxisCountBuilder,
+    this.crossAxisCount,
     this.mainAxisExtent,
-  }) : super(key: key);
+  })  : assert((crossAxisCount != null || crossAxisCountBuilder != null),
+            'Either crossAxisCount or crossAxisCountBuilder should be provided but received none.'),
+        super(key: key);
 
   @override
   State<ModelPagedGridView<Model>> createState() =>
@@ -111,8 +113,8 @@ class _ModelPagedGridViewState<Model> extends State<ModelPagedGridView<Model>> {
     return _buildPagedGridView();
   }
 
-  OrientationBuilder _buildPagedGridView() {
-    return OrientationBuilder(builder: (context, orientation) {
+  Widget _buildPagedGridView() {
+    return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
           Flexible(
@@ -161,9 +163,8 @@ class _ModelPagedGridViewState<Model> extends State<ModelPagedGridView<Model>> {
                   crossAxisSpacing: StylesConstants.kGridViewCrossAxisSpacing,
                   childAspectRatio: widget.childAspectRatio ??
                       StylesConstants.kGridViewAspectRatio,
-                  crossAxisCount: orientation == Orientation.portrait
-                      ? widget.crossAxisCountPortrait
-                      : widget.crossAxisCountLandscape,
+                  crossAxisCount: widget.crossAxisCount ??
+                      widget.crossAxisCountBuilder!(constraints),
                   mainAxisExtent: widget.mainAxisExtent,
                 ),
                 shrinkWrap: widget.shrinkWrap,

@@ -7,7 +7,7 @@ import 'package:restaurant_orders/pages/menu/widgets/menu_item_info_text_screen.
 import 'package:restaurant_orders/pages/menu/widgets/menu_items_counter_screen.dart';
 
 class MenuItemsScreen extends ConsumerWidget {
-  final List<MenuItemModel> menuItemModel;
+  final List<MenuItemModel> model;
   final String itemHeaderName;
 
   ///false: rateMode
@@ -17,7 +17,7 @@ class MenuItemsScreen extends ConsumerWidget {
 
   const MenuItemsScreen({
     Key? key,
-    required this.menuItemModel,
+    required this.model,
     this.isTotalMode = false,
     this.itemHeaderName = StringConstants.kItemKey,
     this.rateOrTotalHeaderName,
@@ -30,7 +30,7 @@ class MenuItemsScreen extends ConsumerWidget {
       tablePadding: const EdgeInsets.all(SpacingConstants.kS16),
       tableCellPadding: const EdgeInsets.all(SpacingConstants.kS8),
       noOfColumns: 3,
-      rows: menuItemModel.asMap(),
+      rows: model.asMap(),
       columnWidthBuilder: (column) {
         if (column == 1) {
           return const FixedColumnWidth(130);

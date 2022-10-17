@@ -4,8 +4,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/extensions/color_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/bar.dart';
+import 'package:restaurant_orders/core/widgets/input_field.dart';
 import 'package:restaurant_orders/models/order_model.dart';
-import 'package:restaurant_orders/pages/local_table_setup/widgets/local_table_input_screen.dart';
 import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
 import 'package:restaurant_orders/state_management/save_cart_order/provider.dart';
 import 'package:restaurant_orders/state_management/update_order/update_order_provider.dart';
@@ -103,7 +103,9 @@ class _ConfirmOrderBottomBarState extends ConsumerState<ConfirmOrderBottomBar> {
   }
 
   Widget _buildTableInput(bool init, FormControl<String> inputFormControl) {
-    return LocalTableInputScreen(
+    return InputField(
+      labelText: StringConstants.kTableNumber,
+      hintText: 'Example: 101',
       formControl: inputFormControl,
       onChanged: (formControl) async {
         await ref

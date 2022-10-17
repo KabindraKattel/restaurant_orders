@@ -63,6 +63,10 @@ dependencies:
   badges: ^2.0.3
   flutter_native_splash: ^2.2.9
   responsive_framework: ^0.2.0
+  version: ^3.0.2
+  new_version_plus: ^0.0.3
+  shimmer: ^2.0.0
+  smooth_page_indicator: ^1.0.0+2
 
 
 

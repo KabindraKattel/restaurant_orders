@@ -6,7 +6,7 @@ import 'package:restaurant_orders/core/resources/resources.dart';
 
 import '../../../core/exceptions_and_failures/exceptions_and_failures.dart';
 import '../../../core/resources/cache_manager.dart';
-import '../dio_http.dart';
+import '../dio_http_impl.dart';
 
 class DioAppInterceptor extends InterceptorsWrapper {
   final String _sessionExpiredMessage = "Session Expired.";

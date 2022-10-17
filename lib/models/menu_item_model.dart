@@ -5,7 +5,7 @@
 
 class MenuItemModel {
   String? itemName;
-  int? iNum;
+  String? iNum;
   double? rate;
   double quantity;
   String? groupName;
@@ -21,7 +21,7 @@ class MenuItemModel {
   factory MenuItemModel.fromJson(Map<String, dynamic> json) {
     return MenuItemModel(
       itemName: json['ItemName'],
-      iNum: (json['INum'] as num?)?.toInt(),
+      iNum: (json['INum'])?.toString(),
       rate: (json['Rate'] as num?)?.toDouble(),
       quantity: ((json['Quantity'] ?? 0) as num).toDouble(),
       groupName: json['GroupName'],
@@ -29,7 +29,7 @@ class MenuItemModel {
   }
 
   MenuItemModel copyWith({
-    int? iNum,
+    String? iNum,
     String? itemName,
     double? rate,
     double? quantity,
@@ -52,10 +52,5 @@ class MenuItemModel {
     map['Quantity'] = quantity;
     map['GroupName'] = groupName;
     return map;
-  }
-
-  @override
-  String toString() {
-    return '$runtimeType:${toJson()}';
   }
 }

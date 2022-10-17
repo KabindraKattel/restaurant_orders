@@ -29,27 +29,29 @@ class MenuPage extends ConsumerWidget {
               icon: const FaIcon(FontAwesomeIcons.arrowsRotate))
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                final state = ref.watch(menuGroupsNotifierProvider);
-                return state.when(
-                    loading: () => const Loading(),
-                    data: (model) => MenuScreen(
-                          menuTab: menuTab,
-                          menuGroupModel: model,
-                        ),
-                    error: (failure, onRetry) => MyErrorWidget(
-                          failure: failure,
-                          onRetry: onRetry,
-                        ));
-              },
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Consumer(
+                builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                  final state = ref.watch(menuGroupsNotifierProvider);
+                  return state.when(
+                      loading: () => const Loading(),
+                      data: (model) => MenuScreen(
+                            menuTab: menuTab,
+                            menuGroupModel: model,
+                          ),
+                      error: (failure, onRetry) => MyErrorWidget(
+                            failure: failure,
+                            onRetry: onRetry,
+                          ));
+                },
+              ),
             ),
-          ),
-          MenuBottomBar(),
-        ],
+            const MenuBottomBar(),
+          ],
+        ),
       ),
     );
   }

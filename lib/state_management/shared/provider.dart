@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_orders/models/models.dart';
+import 'package:restaurant_orders/repos/assets/assets_repo.dart';
+import 'package:restaurant_orders/repos/assets/assets_repo_impl.dart';
 import 'package:restaurant_orders/repos/crud/crud_repo.dart';
 import 'package:restaurant_orders/repos/crud/crud_repo_impl.dart';
 import 'package:restaurant_orders/repos/menu/menu_repo.dart';
@@ -18,3 +20,9 @@ final orderRepoProvider = Provider<OrderRepo>((ref) {
 
 final cartRepoProvider =
     Provider<CrudRepo<MenuItemModel>>((ref) => CrudRepoImpl<MenuItemModel>());
+
+final assetRepoProvider = Provider<AssetRepo>((ref) {
+  return AssetRepoImpl(
+    ref.watch(httpClientProvider),
+  );
+});

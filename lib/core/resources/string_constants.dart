@@ -6,6 +6,7 @@ class StringConstants {
   static const String kRRNoKey = "RRNo";
   static const String kFPinKey = "FPIN";
   static const String kMenuGroupKey = "MenuGroup";
+  static const String kItemNumberKey = "ItemNum";
 
   ///Login
   static const String kMobileNumberLabel = "Mobile Number";
@@ -14,13 +15,15 @@ class StringConstants {
   static const String kLogin = "Login";
 
   ///App
+  static const String kItemNumber = 'Item Number';
   static const String kOpenOrders = 'Open Orders';
   static const String kOrderDetails = 'Order Details';
+  static const String kSearchAndTakeOrder = 'Search Item and Take Order';
   static const String kTakeOrder = 'Take Order';
   static const String kMenu = 'Menu';
   static const String kConfirmOrder = 'Confirm Order';
   static const String kConfirm = 'Confirm';
-
+  static const String kViewAll = 'View All';
   static const String kOrderIdKey = 'Order No: ';
   static const String kTableIdKey = 'Table: ';
   static const String kItemKey = 'Item';

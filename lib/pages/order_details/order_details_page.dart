@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
+import 'package:restaurant_orders/core/widgets/input_field.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
 import 'package:restaurant_orders/core/widgets/no_data_found.dart';
-import 'package:restaurant_orders/pages/local_table_setup/widgets/local_table_input_screen.dart';
 import 'package:restaurant_orders/pages/order_details/widgets/order_details_screen.dart';
 import 'package:restaurant_orders/state_management/order_details/provider.dart';
 
@@ -49,49 +49,51 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
             StringConstants.kOrderDetails,
           ),
         ),
-        body: Padding(
-            padding: const EdgeInsets.all(SpacingConstants.kS8),
-            child: widget.tableNum == null && !widget.enableSearch
-                ? const NoDataFound(
-                    message: MessageConstants.kNoTablesSetup,
-                  )
-                : Column(
-                    children: [
-                      widget.enableSearch
-                          ? _buildSearchBar(ref)
-                          : _buildTableInfo(),
-                      const SizedBox(
-                        height: SpacingConstants.kS8,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Consumer(builder: (_, ref, __) {
-                            final state =
-                                ref.watch(orderDetailsNotifierProvider);
-                            return state.when(
-                                initial: () => const NoDataFound(
-                                      message:
-                                          MessageConstants.kNoSearchTermEntered,
-                                    ),
-                                loading: () => const Loading(),
-                                data: (data) => RefreshIndicator(
-                                      onRefresh: () async => ref.read(
-                                              orderDetailsNotifierProvider
-                                                  .notifier)(
-                                          widget._tableControl.value!),
-                                      child: OrderDetailsScreen(
-                                        model: data,
-                                      ),
-                                    ),
-                                error: (failure, onRetry) => MyErrorWidget(
-                                      failure: failure,
-                                      onRetry: onRetry,
-                                    ));
-                          }),
+        body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.all(SpacingConstants.kS8),
+              child: widget.tableNum == null && !widget.enableSearch
+                  ? const NoDataFound(
+                      message: MessageConstants.kNoTablesSetup,
+                    )
+                  : Column(
+                      children: [
+                        widget.enableSearch
+                            ? _buildSearchBar(ref)
+                            : _buildTableInfo(),
+                        const SizedBox(
+                          height: SpacingConstants.kS8,
                         ),
-                      )
-                    ],
-                  )));
+                        Expanded(
+                          child: Center(
+                            child: Consumer(builder: (_, ref, __) {
+                              final state =
+                                  ref.watch(orderDetailsNotifierProvider);
+                              return state.when(
+                                  initial: () => const NoDataFound(
+                                        message: MessageConstants
+                                            .kNoSearchTermEntered,
+                                      ),
+                                  loading: () => const Loading(),
+                                  data: (data) => RefreshIndicator(
+                                        onRefresh: () async => ref.read(
+                                                orderDetailsNotifierProvider
+                                                    .notifier)(
+                                            widget._tableControl.value!),
+                                        child: OrderDetailsScreen(
+                                          model: data,
+                                        ),
+                                      ),
+                                  error: (failure, onRetry) => MyErrorWidget(
+                                        failure: failure,
+                                        onRetry: onRetry,
+                                      ));
+                            }),
+                          ),
+                        )
+                      ],
+                    )),
+        ));
   }
 
   InputDecorator _buildTableInfo() {
@@ -132,7 +134,10 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     return Row(
       children: [
         Expanded(
-            child: LocalTableInputScreen(formControl: widget._tableControl)),
+            child: InputField(
+                labelText: StringConstants.kTableNumber,
+                hintText: 'Example: 101',
+                formControl: widget._tableControl)),
         IconButton(
             onPressed: () {
               if (widget._tableControl.valid) {

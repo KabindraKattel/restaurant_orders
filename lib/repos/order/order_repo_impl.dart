@@ -7,10 +7,10 @@ import 'package:restaurant_orders/models/open_order_model.dart';
 import 'package:restaurant_orders/models/order_details_model.dart';
 import 'package:restaurant_orders/repos/order/order_repo.dart';
 
-import '../dio/i_dio_http.dart';
+import '../dio/dio_http.dart';
 
 class OrderRepoImpl implements OrderRepo {
-  final IHttpClient _client;
+  final HttpClient _client;
 
   OrderRepoImpl(this._client);
 

@@ -6,6 +6,7 @@ part 'menu_items_state.freezed.dart';
 
 @freezed
 class MenuItemsState with _$MenuItemsState {
+  const factory MenuItemsState.initial() = MenuItemsInitial;
   const factory MenuItemsState.loading() = MenuItemsLoading;
   const factory MenuItemsState.data({required List<MenuItemModel> menuItems}) =
       MenuItemsData;

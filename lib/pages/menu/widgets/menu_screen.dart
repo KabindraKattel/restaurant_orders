@@ -30,15 +30,17 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             (key, value) => MapEntry(
               value.groupName ?? '',
               Consumer(builder: (context, ref, child) {
-                final state =
-                    ref.watch(menuItemsNotifierProvider(value.groupName ?? ''));
+                final state = ref.watch(
+                    menuItemsByGroupNotifierProvider(value.groupName ?? ''));
                 return state.when(
+                  initial: () => Container(),
                   loading: () => const Loading(),
                   data: (model) => RefreshIndicator(
                     onRefresh: () async => ref.refresh(
-                        menuItemsNotifierProvider(value.groupName ?? '')),
+                        menuItemsByGroupNotifierProvider(
+                            value.groupName ?? '')),
                     child: MenuItemsScreen(
-                      menuItemModel: model,
+                      model: model,
                       // orderModel: orderModel,
                     ),
                   ),

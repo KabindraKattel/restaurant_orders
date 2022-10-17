@@ -37,29 +37,31 @@ class _ConfirmOrderPageState extends ConsumerState<ConfirmOrderPage> {
             StringConstants.kConfirmOrder,
           ),
         ),
-        body: Consumer(builder: (context, ref, _) {
-          final state = ref.watch(saveCartOrderNotifierProvider);
-          return state.when(
-            initial: () => _buildBody(),
-            loading: () => const Loading(),
-            success: (tableNum) => SuccessWidget(
-              onContinue: () async {
-                Navigator.maybePop(context, true).then((value) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => OrderDetailsPage(
-                            tableNum: tableNum,
-                            enableSearch: false,
-                          )));
-                });
-              },
-            ),
-            error: (failure, onRetry) => MyErrorWidget(
-              failure: failure,
-              onRetry: onRetry,
-            ),
-          );
-          return _buildBody();
-        }));
+        body: SafeArea(
+          child: Consumer(builder: (context, ref, _) {
+            final state = ref.watch(saveCartOrderNotifierProvider);
+            return state.when(
+              initial: () => _buildBody(),
+              loading: () => const Loading(),
+              success: (tableNum) => SuccessWidget(
+                onContinue: () async {
+                  Navigator.maybePop(context, true).then((value) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => OrderDetailsPage(
+                              tableNum: tableNum,
+                              enableSearch: false,
+                            )));
+                  });
+                },
+              ),
+              error: (failure, onRetry) => MyErrorWidget(
+                failure: failure,
+                onRetry: onRetry,
+              ),
+            );
+            return _buildBody();
+          }),
+        ));
   }
 
   Widget _buildBody() {
@@ -69,7 +71,7 @@ class _ConfirmOrderPageState extends ConsumerState<ConfirmOrderPage> {
         children: [
           Expanded(
             child: MenuItemsScreen(
-              menuItemModel: state.cartOrder.cartItems ?? [],
+              model: state.cartOrder.cartItems ?? [],
               isTotalMode: true,
             ),
           ),

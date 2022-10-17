@@ -18,39 +18,90 @@ import 'package:restaurant_orders/state_management/cart/cart_providers.dart';
 class OpenOrderItemScreen extends ConsumerWidget {
   final String? tableNum;
   final List<OpenOrderModel> model;
-  const OpenOrderItemScreen({Key? key, this.tableNum, required this.model})
-      : super(key: key);
+  final VoidCallback? onGridMode;
+  const OpenOrderItemScreen({
+    Key? key,
+    this.tableNum,
+    required this.model,
+    this.onGridMode,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const highlightColor = ColorConstants.kNewOrderColor;
     const contentHighlightColor = ColorConstants.kWhite;
-    return ModelPagedListView<OpenOrderModel>(
-      items: model,
-      padding: const EdgeInsets.all(SpacingConstants.kS8),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(SpacingConstants.kS8).copyWith(top: 0),
-        child: FloatingActionButton.extended(
-          heroTag: OpenOrderItemScreen,
-          onPressed: () async {
-            ref
-                .read(cartOrderNotifierProvider.notifier)
-                .getOrder(tableNum: tableNum)
-                .then((value) async {
-              Navigator.of(context).push<bool>(
-                  MaterialPageRoute(builder: (_) => const CreateOrderPage()));
-            });
-          },
-          label: const Text(StringConstants.kTakeOrder),
-          icon: const FaIcon(FontAwesomeIcons.plus),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: SpacingConstants.kS8),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              tableNum?.tryPrepend('${StringConstants.kTableNumber} : ') ?? '',
+              style: const TextStyle(
+                  fontSize: StylesConstants.kHeadingSize,
+                  fontWeight: StylesConstants.kHeadingWeight),
+            ),
+            trailing: onGridMode == null
+                ? null
+                : ElevatedButton.icon(
+                    onPressed: onGridMode,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.tableCellsLarge,
+                    ),
+                    label: Text(StringConstants.kViewAll.toUpperCase()),
+                  ),
+          ),
+          Expanded(
+            child: ModelPagedListView<OpenOrderModel>(
+              items: model,
+              padding: const EdgeInsets.all(SpacingConstants.kS8),
+              floatingActionButton: Padding(
+                padding: const EdgeInsets.all(SpacingConstants.kS8),
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    _buildCreateOrderFAB(ref, context, true),
+                    _buildCreateOrderFAB(ref, context, false),
+                  ],
+                ),
+              ),
+              noDataFoundMessage: MessageConstants.kNoOpenOrders,
+              pageSize: 5,
+              itemBuilder: (context, item, index) {
+                return _buildDecoratedContentCard(
+                    context, item, highlightColor, contentHighlightColor);
+              },
+            ),
+          ),
+        ],
       ),
-      noDataFoundMessage: MessageConstants.kNoOpenOrders,
-      pageSize: 5,
-      itemBuilder: (context, item, index) {
-        return _buildDecoratedContentCard(
-            context, item, highlightColor, contentHighlightColor);
+    );
+  }
+
+  FloatingActionButton _buildCreateOrderFAB(
+      WidgetRef ref, BuildContext context, bool searchable) {
+    return FloatingActionButton.small(
+      heroTag: '$OpenOrderItemScreen _$searchable',
+      onPressed: () async {
+        ref
+            .read(cartOrderNotifierProvider.notifier)
+            .getOrder(tableNum: tableNum)
+            .then((value) async {
+          Navigator.of(context).push<bool>(
+            MaterialPageRoute(
+              builder: (_) => CreateOrderPage(
+                searchable: searchable,
+              ),
+            ),
+          );
+        });
       },
+      tooltip: searchable
+          ? StringConstants.kSearchAndTakeOrder
+          : StringConstants.kTakeOrder,
+      child: FaIcon(searchable
+          ? FontAwesomeIcons.magnifyingGlassPlus
+          : FontAwesomeIcons.plus),
     );
   }
 

@@ -5,13 +5,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
-import 'package:restaurant_orders/repos/dio/i_dio_http.dart';
+import 'package:restaurant_orders/repos/dio/dio_http.dart';
 import 'package:uuid/uuid.dart';
 
 import 'auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
-  final IHttpClient _httpClient;
+  final HttpClient _httpClient;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   AuthRepoImpl(this._httpClient);

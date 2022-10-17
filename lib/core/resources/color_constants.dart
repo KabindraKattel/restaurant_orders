@@ -13,6 +13,7 @@ class ColorConstants {
   static const Color kTransparent = Color(0x00000000);
   static const Color kWhite = Color(0xffffffff);
   static const Color kBlack = Color(0xff000000);
+  static const Color kBlack30 = Color.fromRGBO(0, 0, 0, 0.3);
   static const Color kBlack50 = Color.fromRGBO(0, 0, 0, 0.5);
   static const Color kGrey = Color(0xFFC4C4C4);
   static const Color kEdit = Color.fromRGBO(0x66, 0xAA, 0xFF, 1);

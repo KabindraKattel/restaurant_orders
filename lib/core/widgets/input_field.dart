@@ -4,18 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 
-class LocalTableInputScreen extends StatefulWidget {
+class InputField extends StatefulWidget {
+  final String? labelText;
+  final String? hintText;
   final FormControl<String> formControl;
   final void Function(FormControl<String> control)? onChanged;
-  const LocalTableInputScreen(
-      {Key? key, required this.formControl, this.onChanged})
+
+  const InputField(
+      {Key? key,
+      this.hintText,
+      this.labelText,
+      required this.formControl,
+      this.onChanged})
       : super(key: key);
 
   @override
-  State<LocalTableInputScreen> createState() => _LocalTableInputScreenState();
+  State<InputField> createState() => _InputFieldState();
 }
 
-class _LocalTableInputScreenState extends State<LocalTableInputScreen> {
+class _InputFieldState extends State<InputField> {
   StreamSubscription? _subscription;
   final TextStyle _style = const TextStyle(
     color: ColorConstants.kBlack,
@@ -60,11 +67,12 @@ class _LocalTableInputScreenState extends State<LocalTableInputScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              StringConstants.kTableNumber,
-              textAlign: TextAlign.center,
-              style: _style,
-            ),
+            if ((widget.labelText?.trim())?.isNotEmpty ?? false)
+              Text(
+                widget.labelText!,
+                textAlign: TextAlign.center,
+                style: _style,
+              ),
             ReactiveTextField<String>(
               formControl: widget.formControl,
               textInputAction: TextInputAction.done,
@@ -78,7 +86,7 @@ class _LocalTableInputScreenState extends State<LocalTableInputScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 isDense: true,
-                hintText: 'Example: 101',
+                hintText: widget.hintText,
                 hintStyle: _style.copyWith(
                     fontWeight: StylesConstants.kCaptionWeight,
                     fontSize: StylesConstants.kSubTitleSize),

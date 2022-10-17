@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:restaurant_orders/core/pages/flexible_decorated_titled_page.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/confirmation_alert_dialog.dart';
 import 'package:restaurant_orders/core/widgets/loading.dart';
+import 'package:restaurant_orders/core/widgets/my_banner.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
 import 'package:restaurant_orders/pages/open_orders/widgets/open_orders_screen.dart';
 import 'package:restaurant_orders/pages/order_details/order_details_page.dart';
@@ -15,26 +17,24 @@ class OpenOrdersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: const Text(
-            StringConstants.kOpenOrders,
-          ),
-          actions: [
-            IconButton(
-                icon: const FaIcon(FontAwesomeIcons.clockRotateLeft),
-                onPressed: () {
-                  _onOrderHistoryDetails(context);
-                }),
-            IconButton(
-                icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
-                onPressed: () {
-                  _onLogout(context, ref);
-                }),
-          ],
-        ),
-        body: Consumer(builder: (_, ref, __) {
+    return FlexibleDecoratedTitledPage(
+        elevation: 0,
+        title: StringConstants.kOpenOrders,
+        actions: [
+          IconButton(
+              icon: const FaIcon(FontAwesomeIcons.clockRotateLeft),
+              onPressed: () {
+                _onOrderHistoryDetails(context);
+              }),
+          IconButton(
+              icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
+              onPressed: () {
+                _onLogout(context, ref);
+              }),
+        ],
+        fixedBanner: Container(color: ColorConstants.kWhite, child: MyBanner()),
+        fixedBannerColor: ColorConstants.kWhite,
+        child: Consumer(builder: (_, ref, __) {
           final state = ref.watch(openOrdersNotifierProvider);
           return state.when(
               loading: () => const Loading(),
