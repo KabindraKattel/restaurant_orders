@@ -58,7 +58,7 @@ class _MyBannerState extends State<MyBanner> {
                 height: StylesConstants.kCaptionSize,
                 width: MediaQuery.of(context).size.width * 0.5,
                 margin: const EdgeInsets.symmetric(
-                    vertical: StylesConstants.kCaptionSize),
+                    vertical: StylesConstants.kCaptionSize / 2),
               )
             : _buildTitleBody(
                 (model.coAddress ?? ""), StylesConstants.kCaptionSize, expand),
