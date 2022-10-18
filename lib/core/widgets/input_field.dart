@@ -7,7 +7,9 @@ import 'package:restaurant_orders/core/resources/resources.dart';
 class InputField extends StatefulWidget {
   final String? labelText;
   final String? hintText;
+  final TextInputAction? textInputAction;
   final FormControl<String> formControl;
+  final void Function(FormControl<String> control)? onSubmitted;
   final void Function(FormControl<String> control)? onChanged;
 
   const InputField(
@@ -15,6 +17,8 @@ class InputField extends StatefulWidget {
       this.hintText,
       this.labelText,
       required this.formControl,
+      this.onSubmitted,
+      this.textInputAction,
       this.onChanged})
       : super(key: key);
 
@@ -75,9 +79,10 @@ class _InputFieldState extends State<InputField> {
               ),
             ReactiveTextField<String>(
               formControl: widget.formControl,
-              textInputAction: TextInputAction.done,
+              textInputAction: widget.textInputAction ?? TextInputAction.done,
               maxLines: 3,
               textAlign: TextAlign.center,
+              onSubmitted: widget.onSubmitted,
               style: _style.copyWith(
                   fontWeight: StylesConstants.kSubTitleWeight,
                   fontSize: StylesConstants.kSubTitleSize),

@@ -135,21 +135,28 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
       children: [
         Expanded(
             child: InputField(
-                labelText: StringConstants.kTableNumber,
-                hintText: 'Example: 101',
-                formControl: widget._tableControl)),
+          labelText: StringConstants.kTableNumber,
+          hintText: 'Example: 101',
+          formControl: widget._tableControl,
+          textInputAction: TextInputAction.search,
+          onSubmitted: (control) => _initSearch(ref),
+        )),
         IconButton(
             onPressed: () {
-              if (widget._tableControl.valid) {
-                widget._tableControl.unfocus();
-                ref.read(orderDetailsNotifierProvider.notifier)(
-                    widget._tableControl.value!);
-              } else {
-                widget._tableControl.markAsTouched();
-              }
+              _initSearch(ref);
             },
             icon: const FaIcon(FontAwesomeIcons.magnifyingGlass))
       ],
     );
+  }
+
+  void _initSearch(WidgetRef ref) {
+    if (widget._tableControl.valid) {
+      widget._tableControl.unfocus();
+      ref.read(orderDetailsNotifierProvider.notifier)(
+          widget._tableControl.value!);
+    } else {
+      widget._tableControl.markAsTouched();
+    }
   }
 }

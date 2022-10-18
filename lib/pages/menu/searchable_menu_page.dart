@@ -78,9 +78,12 @@ class _OrderDetailsPageState extends ConsumerState<SearchableMenuPage> {
       children: [
         Expanded(
             child: InputField(
-                labelText: StringConstants.kItemNumber,
-                hintText: 'Example: 101',
-                formControl: widget._control)),
+          labelText: StringConstants.kItemNumber,
+          hintText: 'Example: 101',
+          formControl: widget._control,
+          textInputAction: TextInputAction.search,
+          onSubmitted: (control) => _initSearch(ref),
+        )),
         IconButton(
             onPressed: () {
               if (widget._control.valid) {
