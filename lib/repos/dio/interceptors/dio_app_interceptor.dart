@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,6 +12,7 @@ import '../dio_http_impl.dart';
 class DioAppInterceptor extends InterceptorsWrapper {
   final String _sessionExpiredMessage = "Session Expired.";
   final String _sendTimeoutMessage = "Send Timeout.";
+  final String _connectTimeoutMessage = "Connection Timeout.";
   final String _receiveTimeoutMessage = "Receive Timeout.";
   final String _otherMessage = "Some Error Occurred.";
   final _storage = const FlutterSecureStorage();
@@ -77,7 +79,7 @@ class DioAppInterceptor extends InterceptorsWrapper {
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     switch (err.type) {
       case DioErrorType.connectTimeout:
-        err.error = NetworkException();
+        err.error = ServerException(_connectTimeoutMessage);
         break;
       case DioErrorType.sendTimeout:
         err.error = ServerException(_sendTimeoutMessage);
@@ -103,6 +105,10 @@ class DioAppInterceptor extends InterceptorsWrapper {
         }
         break;
       case DioErrorType.other:
+        if (err.error is SocketException) {
+          err.error = NetworkException();
+          break;
+        }
         err.error = ServerException(_otherMessage);
         break;
       default:

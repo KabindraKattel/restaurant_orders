@@ -5,6 +5,7 @@ import 'package:restaurant_orders/core/extensions/color_extension.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
 import 'package:restaurant_orders/core/widgets/carousel_view.dart';
 import 'package:restaurant_orders/core/widgets/my_error.dart';
+import 'package:restaurant_orders/core/widgets/non_scrollable_refresh_indicator.dart';
 import 'package:restaurant_orders/core/widgets/shimmer_widget.dart';
 import 'package:restaurant_orders/models/assets_model.dart';
 import 'package:restaurant_orders/state_management/assets/asset_provider.dart';
@@ -22,18 +23,24 @@ class _MyBannerState extends State<MyBanner> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       final state = ref.watch(assetNotifierProvider);
-      return state.when(
-        error: (failure, onRetry) => MyErrorWidget(
-          hideAnimation: true,
-          failure: failure,
-          onRetry: onRetry,
+      return Container(
+        color: ColorConstants.kBlack.getForegroundColor(),
+        constraints: const BoxConstraints(maxHeight: kToolbarHeight * 1.5),
+        padding: const EdgeInsets.all(SpacingConstants.kS8),
+        child: state.when(
+          error: (failure, onRetry) => MyErrorWidget(
+            hideAnimation: true,
+            failure: failure,
+            onRetry: onRetry,
+          ),
+          loading: () => _buildBannerTile(null, false),
+          data: (List<AssetModel> assetsModel) {
+            return NonScrollableRefreshIndicator(
+                displacement: kToolbarHeight * 0.25,
+                onRefresh: () async => ref.refresh(assetNotifierProvider),
+                child: _buildBannerCarousel(assetsModel, false));
+          },
         ),
-        loading: () => _buildBannerTile(null, false),
-        data: (List<AssetModel> assetsModel) {
-          return RefreshIndicator(
-              onRefresh: () async => ref.refresh(assetNotifierProvider),
-              child: _buildBannerCarousel(assetsModel, false));
-        },
       );
     });
   }
@@ -90,16 +97,9 @@ class _MyBannerState extends State<MyBanner> {
   }
 
   Widget _buildBannerCarousel(List<AssetModel> model, bool expand) {
-    return Container(
-      color: ColorConstants.kBlack.getForegroundColor(),
-      constraints: const BoxConstraints(maxHeight: kToolbarHeight * 1.5),
-      child: Padding(
-        padding: const EdgeInsets.all(SpacingConstants.kS8),
-        child: Center(
-          child: CarouselView(
-              screens: model.map((e) => _buildBannerTile(e, expand)).toList()),
-        ),
-      ),
+    return Center(
+      child: CarouselView(
+          screens: model.map((e) => _buildBannerTile(e, expand)).toList()),
     );
   }
 }

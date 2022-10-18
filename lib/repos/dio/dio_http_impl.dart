@@ -5,7 +5,6 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurant_orders/core/exceptions_and_failures/exceptions_and_failures.dart';
 import 'package:restaurant_orders/core/resources/resources.dart';
@@ -25,7 +24,6 @@ class DioCustomHeader {
 }
 
 class HttpClientImpl implements HttpClient {
-  final _storage = const FlutterSecureStorage();
   final BaseUrlRepo baseUrlRepo;
   final GetConnectionStatus connectivity;
   final WatchConnectionStatusChanges connectionStatusChanges;
@@ -163,7 +161,15 @@ class HttpClientImpl implements HttpClient {
         ),
       );
     } on DioError catch (e) {
-      return Left(HttpFailure(message: e.error.message));
+      final exception = e.error;
+      if (exception is CustomException) {
+        if (exception is NetworkException) {
+          return Left(NetworkFailure(message: exception.message));
+        }
+        return Left(HttpFailure(message: exception.message));
+      } else {
+        return const Left(OtherFailure());
+      }
     }
   }
 

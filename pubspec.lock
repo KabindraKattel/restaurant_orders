@@ -43,13 +43,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  badges:
-    dependency: "direct main"
-    description:
-      name: badges
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -281,13 +274,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
-  faker:
-    dependency: "direct main"
-    description:
-      name: faker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   ffi:
     dependency: transitive
     description:
@@ -786,13 +772,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "14.1.0"
-  reactive_segmented_control:
-    dependency: "direct main"
-    description:
-      name: reactive_segmented_control
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0"
   responsive_framework:
     dependency: "direct main"
     description:
