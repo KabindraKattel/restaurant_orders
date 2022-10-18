@@ -34,7 +34,7 @@ class OpenOrdersScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(SpacingConstants.kS8),
         child: ModelPagedGridView<
             MapEntry<OpenOrderTableModel, List<OpenOrderModel>>>(
-          items: List.of(model.entries.toList())..addAll(model.entries),
+          items: model.entries.toList(),
           noDataFoundMessage: MessageConstants.kNoOpenOrders,
           pageSize: 50,
           padding: const EdgeInsets.symmetric(vertical: SpacingConstants.kS8),
