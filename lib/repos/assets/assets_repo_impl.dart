@@ -21,7 +21,8 @@ class AssetRepoImpl implements AssetRepo {
       requiresToken: false,
     ))
         .fold((l) => Left(l), (response) {
-      final Map<String, dynamic> data = response.data;
+      final Map<String, dynamic> data =
+          (response.data as Map?)?.cast<String, dynamic>() ?? {};
       return Right(data['result'] == null
           ? []
           : ((jsonDecode(data['result']) as List?)
